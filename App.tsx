@@ -20,29 +20,21 @@ import AddReport from "./src/screens/AddReport";
 import Alert from "./src/screens/Alert";
 import { RootStackParamList } from "./src/types/RootStackParamList";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
 
-  //loading the fonts onto the app
-  // const [fontsLoaded] = useFonts({
-  // epilogueRegular: require("./assets/fonts/Epilogue-Regular.ttf"),
-  // });
+  // loading the fonts onto the app
 
   // UseEffect for splash screen
-  // useEffect(() => {
-  //   async function prepare() {
-  //     await SplashScreen.preventAutoHideAsync();
-  //   }
-  //   prepare();
-  // }, []);
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  }, []);
 
-  // //if check for the fonts
-  // if (!fontsLoaded) {
-  //   return undefined;
-  // } else {
-  //   SplashScreen.hideAsync();
-  // }
+  SplashScreen.hideAsync();
 
   return (
     <PaperProvider>
