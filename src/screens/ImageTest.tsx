@@ -4,6 +4,7 @@ import {
   Image,
   TouchableOpacityComponent,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,9 +13,15 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { apiKey } from "../../config/api";
 
+import { firebase } from "../../config/config";
+import { Button } from "react-native-paper";
+
 export default function ImageTest() {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [labels, setLabels] = useState([]);
+
+  //states for file uploading
+  const [uploading, setUploading] = useState(false);
 
   const pickImage = async () => {
     try {
@@ -67,6 +74,45 @@ export default function ImageTest() {
       alert("Error analyzing image. Please try again later.");
     }
   };
+
+  //upload media files
+  const uploadMedia = async () => {
+    setUploading(true);
+    try {
+      const { uri } = await FileSystem.getInfoAsync(imageUri as string);
+      const blob: Blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(xhr.response);
+        };
+        xhr.onerror = (e) => {
+          reject(new TypeError("Network Request Failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+
+      const fileName: any = imageUri?.substring(imageUri?.lastIndexOf("/") + 1);
+      const ref = firebase.storage().ref().child(fileName);
+
+      await ref.put(blob);
+
+      // this is the link that will be sent to the django/ postgreSQL
+      const downloadURL = await ref.getDownloadURL();
+
+      //add axios post to post image alongwith other things to the database
+
+      setUploading(false);
+      Alert.alert("Photo Uploaded!");
+      setImageUri(null);
+      console.log(downloadURL);
+    } catch (error) {
+      console.log(error);
+      setUploading(false);
+    }
+  };
+
   return (
     <SafeAreaView>
       <Text>This is an image being tested...</Text>
@@ -78,24 +124,22 @@ export default function ImageTest() {
       <TouchableOpacity onPress={pickImage}>
         <Text>Pick an Image</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity onPress={analyzeImage}>
         <Text>Analyze it</Text>
       </TouchableOpacity>
-      {
-        labels.length > 0 && (
-            <View>
-                <Text>Labels: </Text>
-                {
-                    labels.map((label) => (
-                        <Text key={label.mid}>
-                            {label.description}
-                        </Text>
-                    ))
-                }
-            </View>
-        )
-      }
+      {labels.length > 0 && (
+        <View>
+          <Text>Labels: </Text>
+          {labels.map((label: any) => (
+            <Text key={label.mid}>{label.description}</Text>
+          ))}
+        </View>
+      )}
+
+      <Button icon={"cloud-upload"} mode="outlined" onPress={uploadMedia}>
+        Upload to Firebase
+      </Button>
     </SafeAreaView>
   );
 }

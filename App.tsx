@@ -9,9 +9,21 @@ import * as SplashScreen from "expo-splash-screen";
 import ImageTest from "./src/screens/ImageTest";
 import { PaperProvider } from "react-native-paper";
 
+// Screens
+import Auth from "./src/screens/Auth";
+import Login from "./src/screens/Login";
+import Register from "./src/screens/Register";
+import Onboarding from "./src/screens/Onboarding";
+import Profile from "./src/screens/Profile";
+import NeighbourhoodDetail from "./src/screens/NeighbourhoodDetail";
+import AddReport from "./src/screens/AddReport";
+import Alert from "./src/screens/Alert";
+import { RootStackParamList } from "./src/types/RootStackParamList";
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+
   //loading the fonts onto the app
   // const [fontsLoaded] = useFonts({
   // epilogueRegular: require("./assets/fonts/Epilogue-Regular.ttf"),
@@ -37,10 +49,18 @@ const App = () => {
       <SafeAreaProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="ImageTest"
+            initialRouteName="Auth"
             screenOptions={{ headerShown: false }}
           >
+            <Stack.Screen name="Auth" component={Auth} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="ImageTest" component={ImageTest} />
+            <Stack.Screen name="Onboarding" component={Onboarding} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Detail" component={NeighbourhoodDetail} />
+            <Stack.Screen name="Report" component={AddReport} />
+            <Stack.Screen name="Alert" component={Alert} />
             {/* Add more screens here */}
           </Stack.Navigator>
         </NavigationContainer>
