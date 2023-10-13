@@ -5,7 +5,9 @@ export const GlobalStyles = StyleSheet.create({
   container: {
     padding: 20,
     display: 'flex',
-    gap: 20
+    gap: 20,
+    backgroundColor: colors.black,
+    flex: 1
   },
   // buttonPrimary: {
   //     backgroundColor: colors.orange,

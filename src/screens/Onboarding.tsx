@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, Animated } from "react-native";
 import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import slides from "../assets/data/slides";
+import slides from "../constants/slides";
 import OnboardingItem from "../components/OnboardingItem";
 import Paginator from "../components/Paginator";
 import NextButton from "../components/NextButton";
