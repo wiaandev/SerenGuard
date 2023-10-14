@@ -5,6 +5,8 @@ import { Button } from "react-native-paper";
 import { analyzeImage } from "../services/google-cloud";
 import { pickImage } from "../utils/functions/pickImage";
 import { uploadMedia } from "../firebase/firebase-storage";
+import { getCurrentUser, onLogOut } from "../firebase/firebase-auth";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ImageTest() {
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -13,7 +15,14 @@ export default function ImageTest() {
   //states for file uploading
   const [uploading, setUploading] = useState(false);
 
+  const navigator = useNavigation()
+
   console.log("labels: ", labels)
+
+  const logout = () => {
+    onLogOut();
+    navigator.navigate('Login');
+  }
 
   return (
     <SafeAreaView>
@@ -46,6 +55,17 @@ export default function ImageTest() {
       >
         Upload to Firebase
       </Button>
+
+      <Button
+        icon={"logout"}
+        mode="outlined"
+        onPress={logout}
+      >
+        Log Out
+      </Button>
+
+      <Text>{getCurrentUser()?.displayName}</Text>
+
     </SafeAreaView>
   );
 }

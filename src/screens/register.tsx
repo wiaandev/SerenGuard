@@ -146,7 +146,7 @@ export default function Register({ navigation }: RegisterProps) {
         />
 
         <TextInput
-          mode="outlined"
+          mode="flat"
           label={"Name"}
           error={!firstName.match(namePattern) ? true : false}
           value={firstName}
@@ -159,7 +159,7 @@ export default function Register({ navigation }: RegisterProps) {
         <Text style={{ color: colors.error }}>{firstNameError}</Text>
 
         <TextInput
-          mode="outlined"
+          mode="flat"
           label={"Surname"}
           error={
             !lastName.match(namePattern) ? true : false && firstName.length > 1
@@ -173,7 +173,7 @@ export default function Register({ navigation }: RegisterProps) {
         <Text style={{ color: colors.error }}>{lastNameError}</Text>
 
         <TextInput
-          mode="outlined"
+          mode="flat"
           label={"Email"}
           error={!email.match(emailPattern) && email.length > 2}
           value={email}
@@ -185,7 +185,7 @@ export default function Register({ navigation }: RegisterProps) {
         <Text style={{ color: colors.error }}>{emailError}</Text>
 
         <TextInput
-          mode="outlined"
+          mode="flat"
           label={"Password"}
           secureTextEntry={secureTextEntry}
           right={
@@ -204,7 +204,7 @@ export default function Register({ navigation }: RegisterProps) {
         <Text style={{ color: colors.error }}>{passwordError}</Text>
 
         <TextInput
-          mode="outlined"
+          mode="flat"
           label={"Confirm Password"}
           secureTextEntry={secureTextEntry}
           right={
@@ -228,7 +228,7 @@ export default function Register({ navigation }: RegisterProps) {
         {value === "officer" && (
           <>
             <TextInput
-              mode="outlined"
+              mode="flat"
               label={"Officer Id"}
               error={!officerId.match(idPattern) && officerId.length > 1}
               value={officerId}

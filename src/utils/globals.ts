@@ -7,7 +7,7 @@ export const GlobalStyles = StyleSheet.create({
     display: 'flex',
     gap: 20,
     backgroundColor: colors.black,
-    flex: 1
+    flex: 1 
   },
   // buttonPrimary: {
   //     backgroundColor: colors.orange,
@@ -46,4 +46,8 @@ export const GlobalStyles = StyleSheet.create({
   //     fontFamily: 'epilogueRegular',
   //     fontSize: 14
   //   }
+  flexCol: {
+    display: 'flex',
+    flexDirection: 'column'
+  }
 });
