@@ -37,7 +37,8 @@ export default function Login({ navigation }: LoginProps) {
   useEffect(() => {
     const subscriber = getAuth().onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("ImageTest");
+        navigation.navigate("Home");
+        setValues(defaultValues);
       }
     });
     return subscriber;

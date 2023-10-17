@@ -1,4 +1,4 @@
-import { apiRequest } from "../../config/api";
+import { API_REQUEST } from "../../config/api";
 import * as FileSystem from "expo-file-system";
 import axios from "axios";
 
@@ -19,7 +19,7 @@ export const analyzeImage = async ({
     }
 
     //API Key
-    const apiUrl = apiRequest;
+    const apiUrl = API_REQUEST;
 
     //read the image file and convert to base64
     const base64ImageData = await FileSystem.readAsStringAsync(imageUri, {
@@ -44,6 +44,7 @@ export const analyzeImage = async ({
 
     console.log(requestData);
     const apiResponse = await axios.post(apiUrl, requestData);
+    console.log(apiResponse.data);
     setLabels(apiResponse.data.responses[0].labelAnnotations);
   } catch (error) {
     console.log(error);

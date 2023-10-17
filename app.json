@@ -30,6 +30,12 @@
         {
           "photosPermission": "SerenGuard accesses your photos to let you share them with your community."
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysInUsePermission": "Allow SerenGuard to use your location?"
+        }
       ]
     ]
   }

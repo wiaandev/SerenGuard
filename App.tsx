@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BackHandler, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,6 +11,7 @@ import {
   MD3LightTheme as DefaultTheme,
   PaperProvider,
 } from "react-native-paper";
+import * as Location from "expo-location";
 
 // Screens
 import Auth from "./src/screens/Auth";
@@ -23,10 +24,15 @@ import AddReport from "./src/screens/AddReport";
 import Alert from "./src/screens/Alert";
 import { RootStackParamList } from "./src/types/RootStackParamList";
 import { colors } from "./src/utils/colors";
+import Home from "./src/screens/Home";
+import { UserLocationContext } from "./src/context/user-location.context";
+import { UserContext, UserProvider } from "./src/context/user.context";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
+  const [location, setLocation] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState("");
   // loading the fonts onto the app
 
   // UseEffect for splash screen
@@ -42,6 +48,7 @@ const App = () => {
     return true;
   };
 
+  // handle functionality when a user presses back (ANDROID ONLY)
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -52,6 +59,27 @@ const App = () => {
       backHandler.remove();
     };
   }, []);
+
+  //fetch users location
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
 
   SplashScreen.hideAsync();
 
@@ -67,77 +95,88 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Onboarding"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen
-              name="Auth"
-              component={Auth}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Register"
-              component={Register}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="ImageTest"
-              component={ImageTest}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Onboarding"
-              component={Onboarding}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Profile"
-              component={Profile}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Detail"
-              component={NeighbourhoodDetail}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Report"
-              component={AddReport}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            <Stack.Screen
-              name="Alert"
-              component={Alert}
-              options={{
-                gestureEnabled: false, // Disable swipe-back gesture for this screen
-              }}
-            />
-            {/* Add more screens here */}
-          </Stack.Navigator>
-        </NavigationContainer>
+        <UserLocationContext.Provider value={{ location, setLocation }}>
+          <UserProvider>
+            <NavigationContainer>
+              <Stack.Navigator
+                initialRouteName="Onboarding"
+                screenOptions={{ headerShown: false }}
+              >
+                <Stack.Screen
+                  name="Auth"
+                  component={Auth}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Login"
+                  component={Login}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Register"
+                  component={Register}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="ImageTest"
+                  component={ImageTest}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Onboarding"
+                  component={Onboarding}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Profile"
+                  component={Profile}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Detail"
+                  component={NeighbourhoodDetail}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Report"
+                  component={AddReport}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Alert"
+                  component={Alert}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                <Stack.Screen
+                  name="Home"
+                  component={Home}
+                  options={{
+                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                  }}
+                />
+                {/* Add more screens here */}
+              </Stack.Navigator>
+            </NavigationContainer>
+          </UserProvider>
+        </UserLocationContext.Provider>
       </SafeAreaProvider>
     </PaperProvider>
   );

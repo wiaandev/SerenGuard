@@ -43,36 +43,7 @@ export default function NextButton({ percentage, scrollTo }: any) {
   }, [percentage])
 
   return (
-    <View style={styles.container}>
-      <Svg width={size} height={size} color={"white"}>
-        <G rotation={-90} origin={center}>
-          <Circle
-            stroke={colors.grey}
-            cx={center}
-            cy={center}
-            r={radius}
-            strokeWidth={strokeWidth}
-          />
-
-          <Circle
-            stroke={colors.orange}
-            cx={center}
-            cy={center}
-            r={radius}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-          />
-        </G>
-      </Svg>
-      <IconButton
-        icon={"arrow-right-bold"}
-        background={colors.orange}
-        style={{ position: "absolute" }}
-        iconColor={colors.white}
-        size={50}
-        onPress={scrollTo}
-      />
-    </View>
+    <Button onPress={scrollTo} mode="contained">Next</Button>
   );
 }
 

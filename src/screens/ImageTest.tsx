@@ -15,30 +15,29 @@ export default function ImageTest() {
   //states for file uploading
   const [uploading, setUploading] = useState(false);
 
-  const navigator = useNavigation()
+  const navigator = useNavigation();
 
-  console.log("labels: ", labels)
+  console.log("labels: ", labels);
 
   const logout = () => {
     onLogOut();
-    navigator.navigate('Login');
-  }
+    navigator.navigate("Login" as never);
+  };
 
   return (
     <SafeAreaView>
-      <Text>This is an image being tested...</Text>
 
       {imageUri && (
         <Image source={{ uri: imageUri }} style={{ width: 300, height: 300 }} />
       )}
 
-      <TouchableOpacity onPress={() => pickImage({ setImageUri })}>
-        <Text>Pick an Image</Text>
-      </TouchableOpacity>
+      <Button mode="contained" onPress={() => pickImage({ setImageUri })} style={{marginBottom: 10}}>
+        <Text>Take photo</Text>
+      </Button>
 
-      <TouchableOpacity onPress={() => analyzeImage({imageUri, setLabels} )}>
+      <Button mode="contained" onPress={() => analyzeImage({ imageUri, setLabels })} style={{marginBottom: 10}}>
         <Text>Analyze it</Text>
-      </TouchableOpacity>
+      </Button>
       {labels.length > 0 && (
         <View>
           <Text>Labels: </Text>
@@ -56,16 +55,11 @@ export default function ImageTest() {
         Upload to Firebase
       </Button>
 
-      <Button
-        icon={"logout"}
-        mode="outlined"
-        onPress={logout}
-      >
+      <Button icon={"logout"} mode="outlined" onPress={logout}>
         Log Out
       </Button>
 
       <Text>{getCurrentUser()?.displayName}</Text>
-
     </SafeAreaView>
   );
 }

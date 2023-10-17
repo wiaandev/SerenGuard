@@ -9,6 +9,7 @@ import NextButton from "../components/NextButton";
 import { colors } from "../utils/colors";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/RootStackParamList";
+import { Button } from "react-native-paper";
 
 type onboardingProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Onboarding">;

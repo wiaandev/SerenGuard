@@ -42,7 +42,7 @@ export default function Register({ navigation }: RegisterProps) {
 
   //setting the detault values of the form
   const [formVals, setFormVals] = useState(defaultValues);
-
+  const [disableButton, setDisableButton] = useState<boolean>(false);
   //de-structuring the values
   const {
     firstName,
@@ -108,6 +108,20 @@ export default function Register({ navigation }: RegisterProps) {
     }
   };
 
+  // const checkValues = () => {
+  //   const emptyVals: boolean =
+  //   firstName == "" &&
+  //   lastName == "" &&
+  //   email == "" &&
+  //   officerId == "" &&
+  //   rank == "" &&
+  //   password == "" &&
+  //   confirmPassword == "";
+  // setDisableButton(!emptyVals);
+  //   return emptyVals;
+  // return emptyVals;
+  // }
+
   const registerUser = () => {
     validateInputs();
     onRegisterNewUser({
@@ -116,7 +130,7 @@ export default function Register({ navigation }: RegisterProps) {
       email: email,
       officerId: officerId,
       isOfficer: officerId ? true : false,
-      rank: officerId? selectedRank: 'N/A',
+      rank: officerId ? selectedRank : "N/A",
       password: password,
     });
   };
@@ -258,7 +272,11 @@ export default function Register({ navigation }: RegisterProps) {
 
         <Text style={{ color: "red" }}>{selectedRank}</Text>
 
-        <Button mode="contained" onPress={registerUser}>
+        <Button
+          mode="contained"
+          onPress={registerUser}
+          disabled={disableButton}
+        >
           Create Account
         </Button>
 
