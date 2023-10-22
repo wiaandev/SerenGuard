@@ -1,19 +1,32 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Pressable,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LocationSearch from "../components/custom/LocationSearch";
 import { Avatar, Button, IconButton, MD3Colors } from "react-native-paper";
 import { checkIsOfficer, onLogOut } from "../firebase/firebase-auth";
 import { UserContext } from "../context/user.context";
 import { getAuth } from "firebase/auth";
 import { colors } from "../utils/colors";
+import Map from "../components/custom/Map";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { GOOGLE_MAPS_KEY } from "../../config/api";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/RootStackParamList";
 
-export default function Home() {
+type HomeScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, "Home">;
+};
+
+export default function Home({ navigation }: HomeScreenProps) {
   const { loggedInUser, getCurrentSignedInUser } = useContext(UserContext);
 
   const [isOfficer, setIsOfficer] = useState<boolean>(false);
-
-  const logoutUser = () => {};
 
   useEffect(() => {
     getCurrentSignedInUser();
@@ -43,47 +56,68 @@ export default function Home() {
 
   return (
     <SafeAreaView>
-      <View style={{position: 'absolute', top: 200, zIndex: 999, backgroundColor: 'white', padding: 30, left: 0, alignItems: 'center'}}>
-        {isOfficer ? (
-          <IconButton icon="police-badge" size={30} iconColor={colors.orange} />
-        ) : (
-          <IconButton
-            icon={"home-account"}
-            size={30}
-            iconColor={colors.black}
-          />
-        )}
-        <Text style={isOfficer ? styles.officerStyle : styles.userStyle}>
-          {loggedInUser?.displayName}
-        </Text>
-        <Text style={{ fontWeight: "bold" }}>{loggedInUser?.email}</Text>
-        <Image
-          source={{ uri: loggedInUser?.photoURL }}
-          style={styles.profileImg}
+      <View
+        style={{
+          flex: 1,
+          position: "absolute",
+          zIndex: 999,
+          width: Dimensions.get("screen").width * 0.9,
+          top: 60,
+          marginHorizontal: 10,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignSelf: "center",
+        }}
+      >
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          minLength={3}
+          fetchDetails={true}
+          query={{
+            key: GOOGLE_MAPS_KEY,
+            language: "en", // language of the results
+          }}
+          onPress={(data, details = null) => {
+            console.log("DATA: ", data);
+            console.log("DETAILS: ", details);
+            navigation.navigate("Detail", {
+              data,
+              details,
+            } as any);
+          }}
+          onFail={(error) => console.error(error)}
+          debounce={20}
+          keepResultsAfterBlur={false}
+          isRowScrollable={false}
+          styles={{
+            textInput: {
+              height: 70,
+              padding: 10,
+              fontSize: 16,
+            },
+          }}
         />
+
+        <Pressable onPress={() => navigation.navigate("Profile")}>
+          <Image
+            source={{ uri: loggedInUser?.photoURL }}
+            style={styles.profileImg}
+          />
+        </Pressable>
       </View>
-      <LocationSearch />
+
+      <Map />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  userStyle: {
-    position: "absolute",
-    top: 550,
-    backgroundColor: colors.black,
-    padding: 20,
-    zIndex: 999,
-    elevation: 5,
-    margin: 10,
-    borderRadius: 20,
-    color: colors.orange,
-    fontWeight: "bold",
-  },
   profileImg: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    margin: 10,
   },
   officerStyle: {
     position: "absolute",
@@ -96,5 +130,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     color: colors.white,
     fontWeight: "bold",
+  },
+  map: {
+    position: "absolute",
+    zIndex: 9999,
   },
 });

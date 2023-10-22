@@ -10,3 +10,4 @@ export type RootStackParamList = {
     Alert: undefined;
     Login: undefined;
 }
+
