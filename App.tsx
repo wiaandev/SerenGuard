@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { BackHandler, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
-import ImageTest from "./src/screens/ImageTest";
 import {
   MD3LightTheme as DefaultTheme,
   PaperProvider,
@@ -119,13 +118,6 @@ const App = () => {
                 <Stack.Screen
                   name="Register"
                   component={Register}
-                  options={{
-                    gestureEnabled: false, // Disable swipe-back gesture for this screen
-                  }}
-                />
-                <Stack.Screen
-                  name="ImageTest"
-                  component={ImageTest}
                   options={{
                     gestureEnabled: false, // Disable swipe-back gesture for this screen
                   }}

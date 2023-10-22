@@ -14,6 +14,7 @@ import { UserType } from "../types/userTypes";
 let auth = getAuth();
 let db = getFirestore();
 
+//  TODO add validation to check if a officer ID alread y
 export const onRegisterNewUser = ({
   firstName,
   lastName,

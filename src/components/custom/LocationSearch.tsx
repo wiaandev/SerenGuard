@@ -20,7 +20,7 @@ const LocationSearch = () => {
   });
 
   const addReport = () => {
-    navigator.navigate("ImageTest" as never);
+    navigator.navigate("Report" as never);
   };
 
   const { location, setLocation } = useContext(UserLocationContext);
