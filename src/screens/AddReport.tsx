@@ -1,16 +1,38 @@
 import { View, Text, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-paper";
+import { Button, Menu, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { pickImage } from "../utils/functions/pickImage";
 import { analyzeImage } from "../services/google-cloud";
-import { uploadMedia } from "../firebase/firebase-storage";
 import { getCurrentUser } from "../firebase/firebase-auth";
+import { onCreateReport } from "../firebase/firebase-db";
+import { CrimeTypes } from "../constants/enums/CrimeType";
+import { UserLocationContext } from "../context/user-location.context";
+
+const defaultValues = {
+  name: "",
+  crimeType: "",
+};
 
 export default function AddReport() {
+  const { location, setLocation } = useContext(UserLocationContext);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [labels, setLabels] = useState<string[]>([]);
+  const [values, setValues] = useState(defaultValues);
+  const { name, crimeType } = values;
+  const uid = getCurrentUser()?.uid;
+
+  const [visible, setVisible] = useState(false);
+  const [selectedCrime, setSelectedCrime] = useState("");
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const onCrimeSelected = (crime: string) => {
+    setSelectedCrime(crime);
+    closeMenu();
+  };
 
   //states for file uploading
   const [uploading, setUploading] = useState(false);
@@ -18,6 +40,20 @@ export default function AddReport() {
   const navigator = useNavigation();
 
   console.log("labels: ", labels);
+
+  const onSubmitReport = async () => {
+    console.log("start of function");
+    await onCreateReport({
+      name: values.name,
+      img: imageUri,
+      crimeType: selectedCrime,
+      labels: labels,
+      uid: uid,
+      lat: location.coords.latitude,
+      long: location.coords.longitude
+    });
+    console.log("end of adding function");
+  };
 
   return (
     <SafeAreaView>
@@ -34,7 +70,29 @@ export default function AddReport() {
       >
         <Text>Take photo</Text>
       </Button>
-      
+
+      <TextInput
+        mode="flat"
+        label={"Report Name"}
+        value={name}
+        autoCapitalize="none"
+        onChangeText={(formValue) => setValues({ ...values, name: formValue })}
+      />
+
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={<Button onPress={openMenu}>Select Violation</Button>}
+      >
+        {CrimeTypes.map((crime) => (
+          <Menu.Item
+            title={crime}
+            key={crime}
+            onPress={() => onCrimeSelected(crime)}
+          />
+        ))}
+      </Menu>
+      <Text>{selectedCrime}</Text>
       <Button
         mode="contained"
         onPress={() => analyzeImage({ imageUri, setLabels })}
@@ -53,14 +111,15 @@ export default function AddReport() {
         </View>
       )}
 
-        <Button
-          icon={"cloud-upload"}
-          mode="outlined"
-          onPress={() => uploadMedia({ setUploading, setImageUri, imageUri })}
-          disabled={labels.length < 1}
-        >
-          Upload to Firebase
-        </Button>
+      <Button
+        icon={"cloud-upload"}
+        mode="outlined"
+        // onPress={() => uploadMedia({ setUploading, setImageUri, imageUri })}
+        onPress={onSubmitReport}
+        disabled={labels.length < 1}
+      >
+        Add Report
+      </Button>
 
       <Text>{getCurrentUser()?.displayName}</Text>
     </SafeAreaView>

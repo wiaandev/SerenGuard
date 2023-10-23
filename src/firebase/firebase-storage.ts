@@ -1,59 +1,35 @@
-import * as FileSystem from "expo-file-system";
-import * as ImagePicker from "expo-image-picker";
-import { firebase } from "../../config/config";
-import { Alert } from "react-native";
+import { getStorage } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+const storage = getStorage();
 
-type uploadProps = {
-  setImageUri: (imageUri: string | null) => void;
-  imageUri: string | null;
-  setUploading: (uploading: boolean) => void;
+const delay = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-//upload media files
-export const uploadMedia = async ({
-  setUploading,
-  setImageUri,
-  imageUri
-}: uploadProps) => {
-  setUploading(true);
+export const uploadToStorage: any = async (
+  fileUri: string,
+  refName: string
+) => {
   try {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (status !== "granted") {
-      alert("Media library access is required to select photos");
-      return;
+    console.log("Busy Uploading...");
+    const response = await fetch(fileUri);
+    if (!response.ok) {
+      throw new Error("Network request failed");
     }
 
-    const { uri } = await FileSystem.getInfoAsync(imageUri as string);
-    const blob: Blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        resolve(xhr.response);
-      };
-      xhr.onerror = (e) => {
-        reject(new TypeError("Network Request Failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
+    const blob: any = await response.blob();
+    const uploadRef = ref(storage, refName);
+    await uploadBytes(uploadRef, blob);
+    blob.close();
 
-    const fileName: any = imageUri?.substring(imageUri?.lastIndexOf("/") + 1);
-    const ref = firebase.storage().ref().child(fileName);
-
-    await ref.put(blob);
-
-    // this is the link that will be sent to the django/ postgreSQL
-    const downloadURL = await ref.getDownloadURL();
-
-    //add axios post to post image alongwith other things to the database
-
-    setUploading(false);
-    Alert.alert("Photo Uploaded!");
-    setImageUri(null);
-    console.log(downloadURL);
-  } catch (error) {
-    console.log(error);
-    setUploading(false);
+    return getDownloadURL(uploadRef);
+  } catch (error: any) {
+    if (error.code === "storage/retry-limit-exceeded") {
+      await delay(5000);
+      return await uploadToStorage(fileUri, refName);
+    } else {
+      console.error("Error uploading to firebase storage", error);
+      throw error;
+    }
   }
 };

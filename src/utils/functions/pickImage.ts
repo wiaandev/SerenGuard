@@ -1,7 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 
 type pickImageProps = {
-    setImageUri: (imageUri: string) => void;
+    setImageUri: (result: string) => void;
 }
 
 export const pickImage = async ({setImageUri}: pickImageProps) => {
