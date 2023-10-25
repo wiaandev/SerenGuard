@@ -77,7 +77,7 @@ export const onCreateReport = async ({
   labels,
   uid,
   lat,
-  long
+  long,
 }: ReportType) => {
   // Assuming that 'db' is properly initialized and is a reference to your Firestore instance.
 
@@ -97,7 +97,7 @@ export const onCreateReport = async ({
       createdAt: Timestamp.now(),
       uid,
       lat,
-      long
+      long,
     };
 
     const reportsCollectionRef = collection(db, "reports");
@@ -108,5 +108,22 @@ export const onCreateReport = async ({
     console.log("Report Added!");
   } catch (error) {
     console.error("Error adding report for " + uid, error);
+  }
+};
+
+export const getAllReports = async () => {
+  const reports: ReportType[] = [];
+  try {
+    const querySnapshot = await getDocs(collection(db, "reports"));
+    console.log(querySnapshot);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+      reports.push({ ...doc.data(), id: doc.id });
+    });
+    console.log(reports);
+    return reports;
+  } catch (error) {
+    console.log(error);
+    return reports;
   }
 };

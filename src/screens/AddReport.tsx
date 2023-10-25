@@ -49,8 +49,10 @@ export default function AddReport() {
       crimeType: selectedCrime,
       labels: labels,
       uid: uid,
-      lat: location.coords.latitude,
-      long: location.coords.longitude
+      // lat: location.coords.latitude,
+      // long: location.coords.longitude
+      lat: "-25.881480",
+      long: "28.175920"
     });
     console.log("end of adding function");
   };

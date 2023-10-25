@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
 import { RootStackParamList } from "../types/RootStackParamList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { GlobalStyles } from "../utils/globals";
+import { colors } from "../utils/colors";
 
 type AuthScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Auth">;
@@ -12,24 +13,45 @@ type AuthScreenProps = {
 
 export default function Auth({ navigation }: AuthScreenProps) {
   return (
-    <SafeAreaView style={GlobalStyles.container}>
-      <Text style={styles.heading}>SerenGuard</Text>
+    <ImageBackground
+      style={[GlobalStyles.container, styles.container]}
+      source={require("../assets/auth-screen.png")}
+    >
+      <SafeAreaView>
+        <Text style={styles.heading}>SerenGuard</Text>
+        <Text style={styles.tagline}>Report Crimes & inform your community </Text>
 
-      <Button mode="contained" onPress={() => navigation.navigate("Register")}>
-        Register
-      </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate("Register")}
+          labelStyle={{color: colors.white}}
+          style={{marginBottom: 10, marginTop: 100}}
+        >
+          Register
+        </Button>
 
-      <Button mode="outlined" onPress={() => navigation.navigate("Login")}>
-        Login
-      </Button>
-
-    </SafeAreaView>
+        <Button mode="outlined" onPress={() => navigation.navigate("Login")} style={{backgroundColor: colors.white, marginVertical: 10}}>
+          Login
+        </Button>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-    heading: {
-        fontSize: 24,
-        fontWeight: 'bold'
-    }
-})
+  heading: {
+    fontSize: 42,
+    fontWeight: "800",
+    color: colors.white,
+    textAlign: 'center'
+  },
+  tagline: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: colors.white,
+    textAlign: 'center'
+  },
+  container: {
+    justifyContent: 'center',
+  }
+});

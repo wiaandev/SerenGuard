@@ -29,21 +29,28 @@ export default function NextButton({ percentage, scrollTo }: any) {
   }, [percentage]);
 
   useEffect(() => {
-    progressAnimation.addListener(
-        (value) => {
-            const strokeDashoffset = circumference - (circumference * value.value) / 100;
+    progressAnimation.addListener((value) => {
+      const strokeDashoffset =
+        circumference - (circumference * value.value) / 100;
 
-            if(progressRef?.current) {
-                progressRef.current.setNativeProps({
-                    strokeDashoffset
-                })
-            }
-        },
-    )
-  }, [percentage])
+      if (progressRef?.current) {
+        progressRef.current.setNativeProps({
+          strokeDashoffset,
+        });
+      }
+    });
+  }, [percentage]);
 
   return (
-    <Button onPress={scrollTo} mode="contained">Next</Button>
+    <>
+      <Button
+        onPress={scrollTo}
+        mode="contained"
+        style={{ padding: 5, marginBottom: 10 }}
+      >
+        {percentage === 100 ? "Get Started" : "Next"}
+      </Button>
+    </>
   );
 }
 

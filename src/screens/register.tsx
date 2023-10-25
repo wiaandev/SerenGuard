@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GlobalStyles } from "../utils/globals";
@@ -136,167 +142,189 @@ export default function Register({ navigation }: RegisterProps) {
   };
 
   return (
-    <ScrollView bounces={false}>
-      <SafeAreaView style={GlobalStyles.container}>
-        <Text>Create Your Account</Text>
+    <ImageBackground
+      source={require("../assets/register-signup-bg.png")}
+      style={[GlobalStyles.container, styles.container]}
+    >
+      <ScrollView bounces={false}>
+        <SafeAreaView style={{ gap: 20 }}>
+          <Text style={styles.heading}>Create Your Account</Text>
 
-        <SegmentedButtons
-          buttons={[
-            {
-              value: "officer",
-              label: "Officer",
-              icon: "police-badge",
-              checkedColor: colors.black,
-            },
-            {
-              value: "civilian",
-              label: "Civilian",
-              icon: "account",
-              checkedColor: colors.orange,
-            },
-          ]}
-          value={value}
-          onValueChange={setValue}
-        />
+          <SegmentedButtons
+            buttons={[
+              {
+                value: "officer",
+                label: "Officer",
+                icon: "police-badge",
+                checkedColor: colors.black,
+              },
+              {
+                value: "civilian",
+                label: "Civilian",
+                icon: "account",
+                checkedColor: colors.black,
+              },
+            ]}
+            value={value}
+            onValueChange={setValue}
+          />
 
-        <TextInput
-          mode="flat"
-          label={"Name"}
-          error={!firstName.match(namePattern) ? true : false}
-          value={firstName}
-          autoCapitalize="none"
-          onChangeText={(formvalue) =>
-            setFormVals({ ...formVals, firstName: formvalue })
-          }
-        />
+          <TextInput
+            mode="flat"
+            label={"Name"}
+            error={!firstName.match(namePattern) ? true : false}
+            value={firstName}
+            autoCapitalize="none"
+            onChangeText={(formvalue) =>
+              setFormVals({ ...formVals, firstName: formvalue })
+            }
+          />
 
-        <Text style={{ color: colors.error }}>{firstNameError}</Text>
+          <Text style={{ color: colors.error }}>{firstNameError}</Text>
 
-        <TextInput
-          mode="flat"
-          label={"Surname"}
-          error={
-            !lastName.match(namePattern) ? true : false && firstName.length > 1
-          }
-          value={lastName}
-          autoCapitalize="none"
-          onChangeText={(formvalue) =>
-            setFormVals({ ...formVals, lastName: formvalue })
-          }
-        />
-        <Text style={{ color: colors.error }}>{lastNameError}</Text>
+          <TextInput
+            mode="flat"
+            label={"Surname"}
+            error={
+              !lastName.match(namePattern)
+                ? true
+                : false && firstName.length > 1
+            }
+            value={lastName}
+            autoCapitalize="none"
+            onChangeText={(formvalue) =>
+              setFormVals({ ...formVals, lastName: formvalue })
+            }
+          />
+          <Text style={{ color: colors.error }}>{lastNameError}</Text>
 
-        <TextInput
-          mode="flat"
-          label={"Email"}
-          error={!email.match(emailPattern) && email.length > 2}
-          value={email}
-          autoCapitalize="none"
-          onChangeText={(formvalue) =>
-            setFormVals({ ...formVals, email: formvalue })
-          }
-        />
-        <Text style={{ color: colors.error }}>{emailError}</Text>
+          <TextInput
+            mode="flat"
+            label={"Email"}
+            error={!email.match(emailPattern) && email.length > 2}
+            value={email}
+            autoCapitalize="none"
+            onChangeText={(formvalue) =>
+              setFormVals({ ...formVals, email: formvalue })
+            }
+          />
+          <Text style={{ color: colors.error }}>{emailError}</Text>
 
-        <TextInput
-          mode="flat"
-          label={"Password"}
-          secureTextEntry={secureTextEntry}
-          right={
-            <TextInput.Icon
-              icon={secureTextEntry ? "eye-off" : "eye"}
-              onPress={toggleSecureTextEntry}
-            />
-          }
-          error={!password.match(passwordPattern) && password.length > 1}
-          value={password}
-          autoCapitalize="none"
-          onChangeText={(formvalue) =>
-            setFormVals({ ...formVals, password: formvalue })
-          }
-        />
-        <Text style={{ color: colors.error }}>{passwordError}</Text>
-
-        <TextInput
-          mode="flat"
-          label={"Confirm Password"}
-          secureTextEntry={secureTextEntry}
-          right={
-            <TextInput.Icon
-              icon={secureTextEntry ? "eye-off" : "eye"}
-              onPress={toggleSecureTextEntry}
-            />
-          }
-          error={password !== confirmPassword}
-          value={confirmPassword}
-          autoCapitalize="none"
-          onChangeText={(formvalue) =>
-            setFormVals({ ...formVals, confirmPassword: formvalue })
-          }
-        />
-        {password !== confirmPassword && (
-          <Text style={{ color: colors.error }}>password does not match</Text>
-        )}
-
-        {value === "officer" && <Divider />}
-        {value === "officer" && (
-          <>
-            <TextInput
-              mode="flat"
-              label={"Officer Id"}
-              error={!officerId.match(idPattern) && officerId.length > 1}
-              value={officerId}
-              autoCapitalize="none"
-              onChangeText={(formvalue) =>
-                setFormVals({ ...formVals, officerId: formvalue })
-              }
-            />
-            <Text style={{ color: colors.error }}>{officerIdError}</Text>
-          </>
-        )}
-        {value === "officer" && (
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={<Button onPress={openMenu}>Select Rank</Button>}
-          >
-            {PoliceRanks.map((rank) => (
-              <Menu.Item
-                title={rank}
-                key={rank}
-                onPress={() => onRankSelect(rank)}
+          <TextInput
+            mode="flat"
+            label={"Password"}
+            secureTextEntry={secureTextEntry}
+            right={
+              <TextInput.Icon
+                icon={secureTextEntry ? "eye-off" : "eye"}
+                onPress={toggleSecureTextEntry}
               />
-            ))}
-          </Menu>
-        )}
+            }
+            error={!password.match(passwordPattern) && password.length > 1}
+            value={password}
+            autoCapitalize="none"
+            onChangeText={(formvalue) =>
+              setFormVals({ ...formVals, password: formvalue })
+            }
+          />
+          <Text style={{ color: colors.error }}>{passwordError}</Text>
 
-        <Text style={{ color: "red" }}>{selectedRank}</Text>
+          <TextInput
+            mode="flat"
+            label={"Confirm Password"}
+            secureTextEntry={secureTextEntry}
+            right={
+              <TextInput.Icon
+                icon={secureTextEntry ? "eye-off" : "eye"}
+                onPress={toggleSecureTextEntry}
+              />
+            }
+            error={password !== confirmPassword}
+            value={confirmPassword}
+            autoCapitalize="none"
+            onChangeText={(formvalue) =>
+              setFormVals({ ...formVals, confirmPassword: formvalue })
+            }
+          />
+          {password !== confirmPassword && (
+            <Text style={{ color: colors.error }}>password does not match</Text>
+          )}
 
-        <Button
-          mode="contained"
-          onPress={registerUser}
-          disabled={disableButton}
-        >
-          Create Account
-        </Button>
+          {value === "officer" && <Divider />}
+          {value === "officer" && (
+            <>
+              <TextInput
+                mode="flat"
+                label={"Officer Id"}
+                error={!officerId.match(idPattern) && officerId.length > 1}
+                value={officerId}
+                autoCapitalize="none"
+                onChangeText={(formvalue) =>
+                  setFormVals({ ...formVals, officerId: formvalue })
+                }
+              />
+              <Text style={{ color: colors.error }}>{officerIdError}</Text>
+            </>
+          )}
+          {value === "officer" && (
+            <Menu
+              visible={visible}
+              onDismiss={closeMenu}
+              anchor={<Button onPress={openMenu}>Select Rank</Button>}
+            >
+              {PoliceRanks.map((rank) => (
+                <Menu.Item
+                  title={rank}
+                  key={rank}
+                  onPress={() => onRankSelect(rank)}
+                />
+              ))}
+            </Menu>
+          )}
 
-        <IconButton
-          icon="google"
-          size={20}
-          style={{ alignSelf: "center" }}
-          onPress={() => console.log("logging in with google")}
-        />
+          <Text style={{ color: "red" }}>{selectedRank}</Text>
 
-        <Button
-          mode="text"
-          onPress={() => navigation.navigate("Login")}
-          elevation={1}
-        >
-          Go to Login
-        </Button>
-      </SafeAreaView>
-    </ScrollView>
+          <Button
+            mode="contained"
+            onPress={registerUser}
+            disabled={disableButton}
+          >
+            Create Account
+          </Button>
+
+          <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
+          <Button
+            icon={"google"}
+            labelStyle={{ color: colors.black }}
+            mode="outlined"
+            style={{ width: 200, alignSelf: "center" }}
+            buttonColor={colors.white}
+          >
+            Register with Google
+          </Button>
+
+          <Button
+            mode="text"
+            onPress={() => navigation.navigate("Login")}
+            elevation={1}
+          >
+            Go to Login
+          </Button>
+        </SafeAreaView>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  heading: {
+    fontSize: 28,
+    color: colors.white,
+    fontWeight: "700",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+  },
+});

@@ -1,4 +1,11 @@
-import { View, Text } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GlobalStyles } from "../utils/globals";
@@ -9,6 +16,7 @@ import { firebase } from "../../config/config";
 import { getAuth } from "firebase/auth";
 import { emailPattern, passwordPattern } from "../utils/regex";
 import { onSignInUser } from "../firebase/firebase-auth";
+import { colors } from "../utils/colors";
 
 type LoginProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Login">;
@@ -57,48 +65,81 @@ export default function Login({ navigation }: LoginProps) {
   };
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
-      <Text>Welcome Back</Text>
-      <Text>Login to your account</Text>
+    <ImageBackground
+      source={require("../assets/register-signup-bg.png")}
+      style={[GlobalStyles.container, styles.container]}
+    >
+      <SafeAreaView style={{ gap: 20 }}>
+        <Text style={styles.heading}>Welcome Back</Text>
+        <Text style={styles.subHeading}>Login to your account</Text>
 
-      <TextInput
-        mode="flat"
-        label={"Email"}
-        error={!email.match(emailPattern) && email.length > 2}
-        value={email}
-        autoCorrect={false}
-        autoCapitalize="none"
-        onChangeText={(formvalue) => setValues({ ...values, email: formvalue })}
-      />
+        <TextInput
+          mode="flat"
+          label={"Email"}
+          error={!email.match(emailPattern) && email.length > 2}
+          value={email}
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={(formvalue) =>
+            setValues({ ...values, email: formvalue })
+          }
+        />
 
-      <TextInput
-        mode="flat"
-        label={"Password"}
-        secureTextEntry={secureTextEntry}
-        right={
-          <TextInput.Icon
-            icon={secureTextEntry ? "eye-off" : "eye"}
-            onPress={toggleSecureTextEntry}
-          />
-        }
-        error={!password.match(passwordPattern) && password.length > 1}
-        value={password}
-        autoCapitalize="none"
-        onChangeText={(formvalue) =>
-          setValues({ ...values, password: formvalue })
-        }
-      />
+        <TextInput
+          mode="flat"
+          label={"Password"}
+          secureTextEntry={secureTextEntry}
+          right={
+            <TextInput.Icon
+              icon={secureTextEntry ? "eye-off" : "eye"}
+              onPress={toggleSecureTextEntry}
+            />
+          }
+          error={!password.match(passwordPattern) && password.length > 1}
+          value={password}
+          autoCapitalize="none"
+          onChangeText={(formvalue) =>
+            setValues({ ...values, password: formvalue })
+          }
+        />
 
-      <Button mode="contained" onPress={login}>
-        Login
-      </Button>
+        <Button mode="contained" onPress={login}>
+          Login
+        </Button>
 
-      <Text style={{ alignSelf: "center" }}>Or Login with</Text>
-      <IconButton icon={"google"} style={{ alignSelf: "center" }} />
+        <Text style={{ alignSelf: "center", color: colors.white}}>Or</Text>
+        <Button
+          icon={"google"}
+          labelStyle={{ color: colors.black }}
+          mode="outlined"
+          style={{ width: 200, alignSelf: 'center' }}
+          buttonColor={colors.white}
+        >
+          Login with Google
+        </Button>
 
-      <Button mode="text" onPress={() => navigation.navigate("Register")}>
-        Go to Register
-      </Button>
-    </SafeAreaView>
+        <Button mode="text" onPress={() => navigation.navigate("Register")}>
+          Go to register
+        </Button>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  heading: {
+    fontSize: 28,
+    color: colors.white,
+    fontWeight: "700",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+    justifyContent: "center",
+  },
+  subHeading: {
+    color: colors.white,
+    fontSize: 18,
+  },
+});

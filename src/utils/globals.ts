@@ -5,7 +5,7 @@ export const GlobalStyles = StyleSheet.create({
   container: {
     padding: 20,
     display: 'flex',
-    gap: 20,
+    gap: 10,
     backgroundColor: colors.black,
     flex: 1 
   },

@@ -1,9 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { BackHandler, StyleSheet, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BackHandler, StyleSheet, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import {
@@ -26,12 +25,14 @@ import { colors } from "./src/utils/colors";
 import Home from "./src/screens/Home";
 import { UserLocationContext } from "./src/context/user-location.context";
 import { UserContext, UserProvider } from "./src/context/user.context";
+import { customDarkTheme } from "./src/utils/theme";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
   const [location, setLocation] = useState<any>(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [onboardingCompleted, setOnboardingCompleted] = useState<any>();
   // loading the fonts onto the app
 
   // UseEffect for splash screen
@@ -40,6 +41,10 @@ const App = () => {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
+  }, []);
+
+  useEffect(() => {
+    checkOnboarding();
   }, []);
 
   const handleBackButton = () => {
@@ -82,23 +87,45 @@ const App = () => {
 
   SplashScreen.hideAsync();
 
+  const darkTheme = {
+    ...customDarkTheme,
+  };
+
   const theme = {
     ...DefaultTheme,
     myOwnProperty: true,
     colors: {
       ...DefaultTheme.colors,
-      myOwnColor: colors.orange,
     },
   };
 
+  const colorScheme = useColorScheme();
+
+  const customTheme = colorScheme === "dark" ? darkTheme : darkTheme;
+
+  //checked if the user has completed the onboarding
+  const checkOnboarding = async () => {
+    try {
+      const value: any = await AsyncStorage.getItem("@onboardingCompleted");
+      console.log("value: ", value);
+
+      if (value == true) {
+        setOnboardingCompleted(true);
+      }
+      console.log("onboarding completed: ", onboardingCompleted);
+    } catch (error) {
+      console.log("Error @checkOnboarding: ", error);
+    }
+  };
+
   return (
-    <PaperProvider theme={theme}>
+    <PaperProvider theme={customTheme}>
       <SafeAreaProvider>
         <UserLocationContext.Provider value={{ location, setLocation }}>
           <UserProvider>
             <NavigationContainer>
               <Stack.Navigator
-                initialRouteName="Onboarding"
+                initialRouteName={onboardingCompleted ? "Auth" : "Onboarding"}
                 screenOptions={{ headerShown: false }}
               >
                 <Stack.Screen

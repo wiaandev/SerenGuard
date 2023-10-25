@@ -5,6 +5,7 @@ import {
   Image,
   Dimensions,
   Pressable,
+  Platform,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -61,17 +62,16 @@ export default function Home({ navigation }: HomeScreenProps) {
           flex: 1,
           position: "absolute",
           zIndex: 999,
-          width: Dimensions.get("screen").width * 0.9,
-          top: 60,
-          marginHorizontal: 10,
-          display: "flex",
+          width: Dimensions.get("screen").width * 0.95,
+          top: Platform.OS === "ios" ? 70 : 40,
           flexDirection: "row",
           justifyContent: "center",
           alignSelf: "center",
+          padding: 10,
         }}
       >
         <GooglePlacesAutocomplete
-          placeholder="Search"
+          placeholder="Search Neighbourhood"
           minLength={3}
           fetchDetails={true}
           query={{
@@ -92,10 +92,12 @@ export default function Home({ navigation }: HomeScreenProps) {
           isRowScrollable={false}
           styles={{
             textInput: {
-              height: 70,
-              padding: 10,
+              height: 60,
               fontSize: 16,
             },
+            listView: {
+              width: Dimensions.get("screen").width * 0.9
+            }
           }}
         />
 
@@ -114,10 +116,11 @@ export default function Home({ navigation }: HomeScreenProps) {
 
 const styles = StyleSheet.create({
   profileImg: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    margin: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginHorizontal: 10,
+    marginVertical: 5
   },
   officerStyle: {
     position: "absolute",
