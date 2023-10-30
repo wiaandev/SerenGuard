@@ -1,4 +1,5 @@
 import {
+  DocumentData,
   Timestamp,
   addDoc,
   collection,
@@ -78,6 +79,7 @@ export const onCreateReport = async ({
   uid,
   lat,
   long,
+  address,
 }: ReportType) => {
   // Assuming that 'db' is properly initialized and is a reference to your Firestore instance.
 
@@ -98,6 +100,7 @@ export const onCreateReport = async ({
       uid,
       lat,
       long,
+      address,
     };
 
     const reportsCollectionRef = collection(db, "reports");
@@ -116,7 +119,7 @@ export const getAllReports = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "reports"));
     console.log(querySnapshot);
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((doc: DocumentData) => {
       console.log(doc.id, "=>", doc.data());
       reports.push({ ...doc.data(), id: doc.id });
     });

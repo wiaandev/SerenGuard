@@ -1,6 +1,11 @@
-import { StyleSheet, Dimensions, View, Image } from "react-native";
+import { StyleSheet, Dimensions, View, Image, Platform } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, {
+  Callout,
+  Heatmap,
+  Marker,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { UserLocationContext } from "../../context/user-location.context";
 import { Badge, FAB, Text } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -13,12 +18,16 @@ import { getAllReports } from "../../firebase/firebase-db";
 import { ReportType } from "../../types/ReportTypes";
 import { GlobalStyles } from "../../utils/globals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Timestamp } from "firebase/firestore";
 
 const Map = () => {
   const { loggedInUser, getCurrentSignedInUser } = useContext(UserContext);
 
   const [isOfficer, setIsOfficer] = useState<boolean>(false);
   const [reports, setReports] = useState<[]>();
+  const [points, setPoints] = useState<
+    { latitude: number; longitude: number; weight: number }[]
+  >([]);
 
   useEffect(() => {
     getCurrentSignedInUser();
@@ -81,6 +90,17 @@ const Map = () => {
     const reports: any = await getAllReports();
     setReports(reports);
     console.log(reports[0].img);
+
+    // for (let i = 0; i < reports.length; i++) {
+    //   let report = reports[i];
+
+    //   if (report.lat && report.long) { // Check if lat and long fields exist in the report
+    //     setPoints((prevPoints) => [
+    //       ...prevPoints,
+    //       { latitude: report.lat, longitude: report.long, weight: 1 },
+    //     ]);
+    //   }
+    // }
   };
 
   useFocusEffect(
@@ -106,30 +126,70 @@ const Map = () => {
         region={mapRegion}
         customMapStyle={mapStyle}
       >
-        {reports?.map((report: ReportType) => (
-          <>
-            <Marker
-              coordinate={{
-                latitude: parseFloat(report?.lat) || 0, // Use parseFloat to ensure it's a number
-                longitude: parseFloat(report?.long) || 0, // Use parseFloat to ensure it's a number
-              }}
-              image={require("../../assets/pin.png")}
-              title="Report"
-              description="Report Description"
-            >
-              <Callout tooltip>
-                <View style={styles.bubble}>
-                  <Text style={styles.name}>{report.name}</Text>
-                  <Text>A short desc</Text>
-                  <Image
-                    style={styles.image}
-                    source={{ uri: report.img as string }}
-                  />
-                </View>
-              </Callout>
-            </Marker>
-          </>
-        ))}
+        {/* <Heatmap
+          points={points}
+          radius={40}
+          opacity={1}
+          gradient={{
+            colors: ["black", "purple", "red", "orange", "white"],
+            startPoints:
+              Platform.OS === "ios"
+                ? [0.01, 0.04, 0.1, 0.45, 0.5]
+                : [0.1, 0.25, 0.5, 0.75, 1],
+            colorMapSize: 2000,
+          }}
+        ></Heatmap> */}
+        {reports?.map((report: ReportType) => {
+          const reportTimestamp = report.createdAt;
+          const currentTimestamp = Timestamp.now();
+
+          // Calculate the time difference in milliseconds
+          const timeDifference =
+            currentTimestamp.toMillis() - reportTimestamp.toMillis();
+
+          // Calculate the time difference in hours
+          const hoursDifference = timeDifference / (60 * 60 * 1000);
+
+          // Create a string that indicates the time difference
+          let calculatedDate = "now";
+
+          if (hoursDifference >= 2 && hoursDifference < 3) {
+            calculatedDate = "2 hours ago";
+          } else if (hoursDifference >= 3) {
+            calculatedDate = "3+ hours ago";
+          }
+          return (
+            <>
+              <Marker
+                coordinate={{
+                  latitude: parseFloat(report?.lat) || 0, // Use parseFloat to ensure it's a number
+                  longitude: parseFloat(report?.long) || 0, // Use parseFloat to ensure it's a number
+                }}
+                image={require("../../assets/pin.png")}
+                title="Report"
+                description="Report Description"
+              >
+                <Callout tooltip>
+                  <View>
+                    <View style={styles.bubble}>
+                      <Text style={styles.name}>{report.name}</Text>
+                      <Text style={styles.address}>{report.address}</Text>
+                      <Text style={styles.address}>{report.crimeType} committed</Text>
+                      <Text style={styles.time}>Reported {calculatedDate}</Text>
+                      <Text>
+                        <Image
+                          style={styles.image}
+                          source={{ uri: report.img as string }}
+                          resizeMode="contain"
+                        />{" "}
+                      </Text>
+                    </View>
+                  </View>
+                </Callout>
+              </Marker>
+            </>
+          );
+        })}
       </MapView>
       <View style={[GlobalStyles.flexCol, styles.fabContainer]}>
         <View>
@@ -173,12 +233,11 @@ const styles = StyleSheet.create({
   bubble: {
     flexDirection: "column",
     alignSelf: "flex-start",
-    color: "black",
+    width: 350,
     backgroundColor: colors.white,
-    borderRadius: 6,
-    borderColor: "#ccc",
-    borderWidth: 0.5,
     padding: 15,
+    borderRadius: 10,
+    height: 300,
   },
   fab: {
     backgroundColor: colors.orange,
@@ -199,9 +258,24 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     marginBottom: 5,
+    fontWeight: "bold",
   },
   image: {
     width: 150,
+    height: 150,
+  },
+  address: {
+    fontSize: 10,
+    color: colors.black,
+    fontStyle: "italic",
+    lineHeight: 30,
+  },
+  time: {
+    fontSize: 10,
+    color: colors.black,
+    fontStyle: "italic",
+    opacity: 0.5,
+    lineHeight: 30,
   },
   badgeStyle: {
     position: "absolute",
