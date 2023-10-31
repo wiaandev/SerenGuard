@@ -17,6 +17,7 @@ import { UserType } from "../types/userTypes";
 import { getDb } from "../../config/config";
 import { ReportType } from "../types/ReportTypes";
 import { uploadToStorage } from "./firebase-storage";
+import { db } from "../../config/config";
 
 const setDocument = async (ref: any, data: any) => {
   try {
@@ -25,8 +26,6 @@ const setDocument = async (ref: any, data: any) => {
     console.log("couldn't set document", error);
   }
 };
-
-const db = getDb();
 
 // user collection
 export const onCreateUserInDb = async ({
@@ -129,4 +128,42 @@ export const getAllReports = async () => {
     console.log(error);
     return reports;
   }
+};
+
+export const getOfficerReports = async (uid: string) => {
+  console.log("UID: ",uid);
+  let reports: any[] = [];
+  if (uid) {
+    // Check if uid is not null or undefined
+    
+    const reportsSnapshot = await getDocs(collection(db, "reports"));
+
+    const usersDocuments = doc(collection(db, "users"), uid); // Remove toString() if uid is already a string
+    console.log("WHAT I'M LOOKING AT: ", usersDocuments);
+    const usersSnapshot = await getDoc(usersDocuments);
+
+    try {
+      if (usersSnapshot.exists()) {
+        reportsSnapshot.forEach((doc) => {
+          const reportData = doc.data();
+          const reportUid = reportData.uid;
+
+          if (reportUid === uid) {
+            reports.push({ ...doc.data(), uid: doc.id });
+          }
+          console.log(reports);
+        });
+      }
+      
+    } catch (error) {
+      console.error(error);
+    
+    }
+    return reports;
+  } else {
+    console.error("Invalid uid provided.");
+    
+  }
+
+
 };

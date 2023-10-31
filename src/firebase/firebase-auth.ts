@@ -97,7 +97,7 @@ export const updateAuthProfile = (firstName: string, lastName: string) => {
     updateProfile(auth.currentUser, {
       displayName: `${firstName}${lastName.split('').join('')}`,
       photoURL:
-        "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+        "https://i.pinimg.com/originals/fd/b6/de/fdb6dea1b13458837c6e56361d2c2771.jpg",
     })
       .then(() => {
         console.log("profile has been updated");

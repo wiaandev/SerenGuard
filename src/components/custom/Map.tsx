@@ -170,20 +170,21 @@ const Map = () => {
                 description="Report Description"
               >
                 <Callout tooltip>
-                  <View>
-                    <View style={styles.bubble}>
-                      <Text style={styles.name}>{report.name}</Text>
-                      <Text style={styles.address}>{report.address}</Text>
-                      <Text style={styles.address}>{report.crimeType} committed</Text>
-                      <Text style={styles.time}>Reported {calculatedDate}</Text>
-                      <Text>
-                        <Image
-                          style={styles.image}
-                          source={{ uri: report.img as string }}
-                          resizeMode="contain"
-                        />{" "}
-                      </Text>
-                    </View>
+                  <View style={styles.bubble}>
+                    <Text style={styles.name}>{report.name}</Text>
+                    <Text style={styles.address}>{report.address}</Text>
+                    <Text style={styles.address}>
+                      {report.crimeType} committed
+                    </Text>
+                    <Text style={styles.time}>Reported {calculatedDate}</Text>
+                    <Text style={styles.time}>{report.createdAt.toDate().toString()}</Text>
+                    <Text>
+                      <Image
+                        style={styles.image}
+                        source={{ uri: report?.img as string }}
+                        resizeMode="contain"
+                      />{" "}
+                    </Text>
                   </View>
                 </Callout>
               </Marker>
@@ -192,7 +193,7 @@ const Map = () => {
         })}
       </MapView>
       <View style={[GlobalStyles.flexCol, styles.fabContainer]}>
-        <View>
+        {/* <View>
           <FAB
             icon="bullhorn"
             label="Alerts"
@@ -202,14 +203,14 @@ const Map = () => {
             color={colors.black}
           />
           <Badge style={styles.badgeStyle}>12</Badge>
-        </View>
-        <FAB
+        </View> */}
+        {/* <FAB
           label="Clear Async Storage"
           style={styles.fabAlert}
           onPress={clearOnboarding}
           animated={true}
           color={colors.black}
-        />
+        /> */}
         {isOfficer && (
           <FAB
             icon="plus"
@@ -233,7 +234,6 @@ const styles = StyleSheet.create({
   bubble: {
     flexDirection: "column",
     alignSelf: "flex-start",
-    width: 350,
     backgroundColor: colors.white,
     padding: 15,
     borderRadius: 10,
@@ -268,14 +268,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.black,
     fontStyle: "italic",
-    lineHeight: 30,
   },
   time: {
     fontSize: 10,
     color: colors.black,
     fontStyle: "italic",
     opacity: 0.5,
-    lineHeight: 30,
   },
   badgeStyle: {
     position: "absolute",

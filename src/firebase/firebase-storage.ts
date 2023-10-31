@@ -1,6 +1,5 @@
-import { getStorage } from "firebase/storage";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-const storage = getStorage();
+import { storage } from "../../config/config";
 
 const delay = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
