@@ -34,7 +34,7 @@ export const analyzeImage = async ({
           },
           features: [
             {
-              "maxResults": 3,
+              "maxResults": 10,
               type: "LABEL_DETECTION"
             },
           ]

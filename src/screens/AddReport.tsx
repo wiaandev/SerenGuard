@@ -18,6 +18,7 @@ const defaultValues = {
   crimeType: "",
 };
 
+
 export default function AddReport() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -72,7 +73,7 @@ export default function AddReport() {
         lat: location.coords.latitude,
         long: location.coords.longitude,
         address: address,
-        createdAt: Timestamp.now()
+        createdAt: Timestamp.now(),
       });
     }
 

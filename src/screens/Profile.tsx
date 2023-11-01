@@ -134,7 +134,7 @@ export default function Profile({ navigation }: ProfileScreenProps) {
           >
             Reports
           </Text>
-          <FlatList data={reports} renderItem={renderItem} />
+          <FlatList data={reports} renderItem={renderItem}/>
         </>
       )}
       <Button
