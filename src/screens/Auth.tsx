@@ -40,7 +40,7 @@ export default function Auth({ navigation }: AuthScreenProps) {
 
 const styles = StyleSheet.create({
   heading: {
-    fontSize: 42,
+    fontSize: 50,
     fontWeight: "800",
     color: colors.white,
     textAlign: 'center'

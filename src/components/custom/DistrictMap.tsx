@@ -1,58 +1,17 @@
 import { StyleSheet, Dimensions, View, Image, Platform } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import MapView, {
-  Callout,
-  Heatmap,
-  Marker,
-  PROVIDER_GOOGLE,
-} from "react-native-maps";
-import { UserLocationContext } from "../../context/user-location.context";
-import { Badge, FAB, Text } from "react-native-paper";
+import React, { useCallback, useEffect, useState } from "react";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { Text } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { UserContext } from "../../context/user.context";
-import { checkIsOfficer } from "../../firebase/firebase-auth";
-import { getAuth } from "firebase/auth";
 import { mapStyle } from "../../constants/mapStyle";
 import { colors } from "../../utils/colors";
 import { getAllReports } from "../../firebase/firebase-db";
 import { ReportType } from "../../types/ReportTypes";
-import { GlobalStyles } from "../../utils/globals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Timestamp } from "firebase/firestore";
 
-const Map = () => {
-  const { loggedInUser, getCurrentSignedInUser } = useContext(UserContext);
-
-  const [isOfficer, setIsOfficer] = useState<boolean>(false);
+const DistrictMap = ({ long, lat }: any) => {
   const [reports, setReports] = useState<[]>();
-  const [points, setPoints] = useState<
-    { latitude: number; longitude: number; weight: number }[]
-  >([]);
-
-  useEffect(() => {
-    getCurrentSignedInUser();
-
-    const unsubscribe = getAuth().onAuthStateChanged((user) => {
-      if (user) {
-        const uid = user.uid;
-
-        checkIsOfficer(uid)
-          .then((result: any) => {
-            setIsOfficer(result);
-          })
-          .catch((error) => {
-            console.log("error checking if user is officer", error);
-            setIsOfficer(false);
-          });
-      } else {
-        setIsOfficer(false);
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   const navigator = useNavigation();
 
@@ -66,38 +25,19 @@ const Map = () => {
   const addReport = () => {
     navigator.navigate("Report" as never);
   };
-  const onNavAlerts = () => {
-    navigator.navigate("Alert" as never);
-  };
-
-  const { location, setLocation } = useContext(UserLocationContext);
 
   useEffect(() => {
-    if (location) {
-      setMapRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-    }
+    setMapRegion({
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02,
+    });
   }, []);
-
 
   const getReports = async () => {
     const reports: any = await getAllReports();
     setReports(reports);
-
-    // for (let i = 0; i < reports.length; i++) {
-    //   let report = reports[i];
-
-    //   if (report.lat && report.long) { // Check if lat and long fields exist in the report
-    //     setPoints((prevPoints) => [
-    //       ...prevPoints,
-    //       { latitude: report.lat, longitude: report.long, weight: 1 },
-    //     ]);
-    //   }
-    // }
   };
 
   useFocusEffect(
@@ -122,21 +62,10 @@ const Map = () => {
         provider={PROVIDER_GOOGLE}
         region={mapRegion}
         customMapStyle={mapStyle}
-        showsMyLocationButton
+        scrollEnabled={false}
+        zoomEnabled={false}
+        rotateEnabled={false}
       >
-        {/* <Heatmap
-          points={points}
-          radius={40}
-          opacity={1}
-          gradient={{
-            colors: ["black", "purple", "red", "orange", "white"],
-            startPoints:
-              Platform.OS === "ios"
-                ? [0.01, 0.04, 0.1, 0.45, 0.5]
-                : [0.1, 0.25, 0.5, 0.75, 1],
-            colorMapSize: 2000,
-          }}
-        ></Heatmap> */}
         {reports?.map((report: ReportType) => {
           const reportTimestamp = report.createdAt;
           const currentTimestamp = Timestamp.now();
@@ -175,7 +104,9 @@ const Map = () => {
                       {report.crimeType} committed
                     </Text>
                     <Text style={styles.time}>Reported {calculatedDate}</Text>
-                    <Text style={styles.time}>{report.createdAt.toDate().toString()}</Text>
+                    <Text style={styles.time}>
+                      {report.createdAt.toDate().toString()}
+                    </Text>
                     <Text>
                       <Image
                         style={styles.image}
@@ -190,44 +121,14 @@ const Map = () => {
           );
         })}
       </MapView>
-      <View style={[GlobalStyles.flexCol, styles.fabContainer]}>
-        {/* <View>
-          <FAB
-            icon="bullhorn"
-            label="Alerts"
-            style={styles.fabAlert}
-            onPress={onNavAlerts}
-            animated={true}
-            color={colors.black}
-          />
-          <Badge style={styles.badgeStyle}>12</Badge>
-        </View> */}
-        {/* <FAB
-          label="Clear Async Storage"
-          style={styles.fabAlert}
-          onPress={clearOnboarding}
-          animated={true}
-          color={colors.black}
-        /> */}
-        {isOfficer && (
-          <FAB
-            icon="plus"
-            color={colors.white}
-            label="Report"
-            style={styles.fab}
-            onPress={addReport}
-            animated={true}
-          />
-        )}
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   map: {
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width * 0.93,
+    height: Dimensions.get("screen").height * 0.3,
   },
   bubble: {
     flexDirection: "column",
@@ -280,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Map;
+export default DistrictMap;

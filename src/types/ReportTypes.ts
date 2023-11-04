@@ -9,5 +9,6 @@ export type ReportType = {
   lat: string;
   long: string;
   address: string | null | undefined;
+  neighbourhood: string | null;
   createdAt: Timestamp
 };

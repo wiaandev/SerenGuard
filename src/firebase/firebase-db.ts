@@ -19,7 +19,6 @@ import { getDb } from "../../config/config";
 import { ReportType } from "../types/ReportTypes";
 import { uploadToStorage } from "./firebase-storage";
 import { db } from "../../config/config";
-import { ReportCoords } from "../types/ReportCoords";
 
 const setDocument = async (ref: any, data: any) => {
   try {
@@ -39,7 +38,6 @@ export const onCreateUserInDb = async ({
   isOfficer,
   uid,
 }: UserType) => {
-
   const userRef = doc(db, "users", uid as string);
 
   try {
@@ -73,6 +71,7 @@ export const onCreateReport = async ({
   lat,
   long,
   address,
+  neighbourhood,
 }: ReportType) => {
   // Assuming that 'db' is properly initialized and is a reference to your Firestore instance.
 
@@ -94,6 +93,7 @@ export const onCreateReport = async ({
       lat,
       long,
       address,
+      neighbourhood,
     };
 
     const reportsCollectionRef = collection(db, "reports");
@@ -122,17 +122,30 @@ export const getAllReports = async () => {
   }
 };
 
-export const getReportLatAndLong = async () => {
-  const reportCoords: ReportCoords[] = []; 
-}
+export const getReportsByArea = async (area: string) => {
+  const reports: ReportType[] = [];
+  try {
+    const querySnapshot = await getDocs(collection(db, "reports"));
+    querySnapshot.forEach((doc: DocumentData) => {
+      if (area == doc.data().neighbourhood) {
+        console.log("AREA: ", area);
+        console.log("NEIGHBOURHOOD: ",doc.neighbourhood);
+        reports.push({ ...doc.data(), id: doc.id });
+      }
+    });
+    return reports;
+  } catch (error) {
+    console.log(error);
+    return reports;
+  }
+};
 
 export const getOfficerReports = async (uid: string) => {
-
   if (!uid) {
     console.error("Invalid uid provided. ", uid);
     return [];
   }
-  
+
   try {
     const querySnapshot = await getDocs(
       query(collection(db, "reports"), where("uid", "==", uid))

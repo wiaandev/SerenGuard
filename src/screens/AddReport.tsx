@@ -3,26 +3,27 @@ import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Chip, Divider, Menu, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { pickImage } from "../utils/functions/pickImage";
+import { pickImage, takePhoto } from "../utils/functions/pickImage";
 import { analyzeImage } from "../services/google-cloud";
 import { getCurrentUser } from "../firebase/firebase-auth";
 import { onCreateReport } from "../firebase/firebase-db";
-import { CrimeTypes } from "../constants/enums/CrimeType";
+import CrimeType, { CrimeTypes } from "../constants/enums/CrimeType";
 import { UserLocationContext } from "../context/user-location.context";
 import * as Location from "expo-location";
 import { colors } from "../utils/colors";
 import { Timestamp } from "firebase/firestore";
+import DropDown from "react-native-paper-dropdown";
 
 const defaultValues = {
   name: "",
   crimeType: "",
 };
 
-
 export default function AddReport() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [address, setAddress] = useState<string | null>();
+  const [district, setDistrict] = useState<string | null>("");
   const [labels, setLabels] = useState<string[]>([]);
   const [values, setValues] = useState(defaultValues);
   const { name, crimeType } = values;
@@ -39,11 +40,14 @@ export default function AddReport() {
     closeMenu();
   };
 
+  // Dropdown states
+  const [showMultiSelectDropDown, setShowMultiSelectDropDown] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+
   //states for file uploading
   const [uploading, setUploading] = useState(false);
 
   const navigator = useNavigation();
-
 
   const convertToAddress = async () => {
     const reverseGeoCodeAddress = await Location.reverseGeocodeAsync({
@@ -53,6 +57,7 @@ export default function AddReport() {
     setAddress(
       `${reverseGeoCodeAddress[0].streetNumber} ${reverseGeoCodeAddress[0].street}, ${reverseGeoCodeAddress[0].district}, ${reverseGeoCodeAddress[0].city}, ${reverseGeoCodeAddress[0].postalCode}`
     );
+    setDistrict(reverseGeoCodeAddress[0].district);
   };
 
   const onSubmitReport = async () => {
@@ -67,10 +72,10 @@ export default function AddReport() {
         lat: location.coords.latitude,
         long: location.coords.longitude,
         address: address,
+        neighbourhood: district,
         createdAt: Timestamp.now(),
       });
     }
-
   };
 
   return (
@@ -120,24 +125,37 @@ export default function AddReport() {
           style={{ marginTop: 20, borderColor: colors.orange }}
         />
 
-        <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={<Button onPress={openMenu}>Select Violation</Button>}
-        >
-          {CrimeTypes.map((crime) => (
-            <Menu.Item
-              title={crime}
-              key={crime}
-              onPress={() => onCrimeSelected(crime)}
-              style={{ width: 100 }}
-            />
-          ))}
-        </Menu>
+        <View style={{ marginTop: 20 }}>
+          <DropDown
+            label={"Crime Type"}
+            mode="flat"
+            visible={showMultiSelectDropDown}
+            showDropDown={() => setShowMultiSelectDropDown(true)}
+            onDismiss={() => setShowMultiSelectDropDown(false)}
+            value={selectedCrime}
+            list={CrimeTypes.map((crime) => ({ label: crime, value: crime }))}
+            setValue={setSelectedCrime}
+            multiSelect={false}
+            dropDownItemTextStyle={{ color: "white" }}
+          />
+        </View>
 
         <Button
           mode="outlined"
           icon={!imageUri ? "camera-plus" : "file-replace"}
+          onPress={() => takePhoto({ setImageUri })}
+          style={{
+            marginBottom: 10,
+            borderColor: colors.orange,
+            padding: 20,
+            marginVertical: 30,
+          }}
+        >
+          <Text>{!imageUri ? "Take Photo" : "Re-Take Photo"}</Text>
+        </Button>
+        <Button
+          mode="outlined"
+          icon={"image"}
           onPress={() => pickImage({ setImageUri })}
           style={{
             marginBottom: 10,
@@ -146,8 +164,9 @@ export default function AddReport() {
             marginVertical: 30,
           }}
         >
-          <Text>{!imageUri ? "Take Photo" : "Change Photo"}</Text>
+          <Text>Pick from gallery</Text>
         </Button>
+
         <Text>{selectedCrime}</Text>
         <Button
           mode="contained"
