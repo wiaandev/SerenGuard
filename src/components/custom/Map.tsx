@@ -35,7 +35,6 @@ const Map = () => {
     const unsubscribe = getAuth().onAuthStateChanged((user) => {
       if (user) {
         const uid = user.uid;
-        console.log(uid);
 
         checkIsOfficer(uid)
           .then((result: any) => {
@@ -84,12 +83,10 @@ const Map = () => {
     }
   }, []);
 
-  console.log(location);
 
   const getReports = async () => {
     const reports: any = await getAllReports();
     setReports(reports);
-    console.log(reports[0].img);
 
     // for (let i = 0; i < reports.length; i++) {
     //   let report = reports[i];

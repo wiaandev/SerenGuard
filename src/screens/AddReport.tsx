@@ -44,24 +44,18 @@ export default function AddReport() {
 
   const navigator = useNavigation();
 
-  console.log("labels: ", labels);
 
   const convertToAddress = async () => {
     const reverseGeoCodeAddress = await Location.reverseGeocodeAsync({
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
     });
-
-    console.log("Reverse Geocoded");
-    console.log(reverseGeoCodeAddress);
     setAddress(
       `${reverseGeoCodeAddress[0].streetNumber} ${reverseGeoCodeAddress[0].street}, ${reverseGeoCodeAddress[0].district}, ${reverseGeoCodeAddress[0].city}, ${reverseGeoCodeAddress[0].postalCode}`
     );
-    console.log(address);
   };
 
   const onSubmitReport = async () => {
-    console.log("start of function");
     await convertToAddress().then((res) => console.log("RES ", res));
     if (address) {
       await onCreateReport({
@@ -77,7 +71,6 @@ export default function AddReport() {
       });
     }
 
-    console.log("end of adding function");
   };
 
   return (

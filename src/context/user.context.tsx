@@ -9,10 +9,16 @@ export const UserProvider = ({ children }: any) => {
 
   const getCurrentSignedInUser = () => {
     const currentUser = getCurrentUser();
-    console.log(currentUser);
-    setLoggedInUser(currentUser);
+    if (currentUser) {
+      setLoggedInUser(currentUser);
+    } else {
+      console.log("NO USER FOUND IN CONTEXT");
+    }
   };
 
+  useEffect(() => {
+    getCurrentSignedInUser();
+  }, []);
 
   return (
     <UserContext.Provider

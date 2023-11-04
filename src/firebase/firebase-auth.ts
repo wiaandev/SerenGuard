@@ -47,7 +47,6 @@ export const onRegisterNewUser = async ({
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        console.log(user);
         await onCreateUserInDb({
           firstName,
           lastName,
@@ -64,6 +63,8 @@ export const onRegisterNewUser = async ({
         console.log("Error creating user: ", error);
         return false;
       });
+  } else {
+    return false;
   }
 };
 
@@ -105,10 +106,8 @@ export const checkIsOfficer = async (uid: string) => {
     const querySnapShot = await getDoc(userRef);
 
     if (querySnapShot.exists() && querySnapShot.data().isOfficer) {
-      console.log("this user is an officer");
       return true;
     } else {
-      console.log("this user is a civilian");
       return false;
     }
   } catch (error) {

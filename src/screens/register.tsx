@@ -90,16 +90,13 @@ export default function Register({ navigation }: RegisterProps) {
     closeMenu();
   };
 
-  const isFirstNameValid = namePattern.test(firstName);
-
-  console.log(isFirstNameValid);
+  namePattern.test(firstName);
 
   const toggleSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
 
   const validateInputs = () => {
-    console.log("running function");
     if (!firstName.match(namePattern)) {
       setFirstNameError("Invalid First Name");
       return false;
@@ -174,14 +171,6 @@ export default function Register({ navigation }: RegisterProps) {
     const valInputs: any = validateInputs();
 
     if (!valInputs) {
-      console.log("some form values are incorrect");
-      console.log(firstName);
-      console.log(lastName);
-      console.log(email);
-      console.log(password);
-      console.log(confirmPassword);
-      console.log(selectedRank);
-      console.log(officerId);
       return;
     }
 
@@ -194,7 +183,6 @@ export default function Register({ navigation }: RegisterProps) {
 
     if (value === "officer") {
       if (!officerId || !selectedRank) {
-        console.log("Enter all your officer credentials");
         return;
       }
 
@@ -228,7 +216,7 @@ export default function Register({ navigation }: RegisterProps) {
       rank: userRegistrationData.selectedRank,
     };
 
-    if(!onRegisterNewUser){
+    if (!onRegisterNewUser) {
       setOfficerIdError("OfficerId already exists");
       Alert.alert("Officer ID already exists");
     }

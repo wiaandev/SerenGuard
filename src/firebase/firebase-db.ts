@@ -12,12 +12,14 @@ import {
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { UserType } from "../types/userTypes";
 import { getDb } from "../../config/config";
 import { ReportType } from "../types/ReportTypes";
 import { uploadToStorage } from "./firebase-storage";
 import { db } from "../../config/config";
+import { ReportCoords } from "../types/ReportCoords";
 
 const setDocument = async (ref: any, data: any) => {
   try {
@@ -37,14 +39,8 @@ export const onCreateUserInDb = async ({
   isOfficer,
   uid,
 }: UserType) => {
-  console.log("running create db function");
-  console.log(uid);
-  console.log(firstName);
-  console.log(lastName);
-  console.log(rank);
 
   const userRef = doc(db, "users", uid as string);
-  console.log("passed 1");
 
   try {
     const userData = {
@@ -61,10 +57,8 @@ export const onCreateUserInDb = async ({
       userData.officerId = officerId;
       userData.rank = rank;
     }
-    console.log("BEFORE SET DOCUMENT");
 
     await setDocument(userRef, userData);
-    console.log("end of create db function");
   } catch (error) {
     console.log("couldn't create user in database", error);
   }
@@ -108,6 +102,7 @@ export const onCreateReport = async ({
     await setDoc(newDocRef, reportData);
 
     console.log("Report Added!");
+    return true;
   } catch (error) {
     console.error("Error adding report for " + uid, error);
   }
@@ -117,12 +112,9 @@ export const getAllReports = async () => {
   const reports: ReportType[] = [];
   try {
     const querySnapshot = await getDocs(collection(db, "reports"));
-    console.log(querySnapshot);
     querySnapshot.forEach((doc: DocumentData) => {
-      console.log(doc.id, "=>", doc.data());
       reports.push({ ...doc.data(), id: doc.id });
     });
-    console.log(reports);
     return reports;
   } catch (error) {
     console.log(error);
@@ -130,40 +122,28 @@ export const getAllReports = async () => {
   }
 };
 
+export const getReportLatAndLong = async () => {
+  const reportCoords: ReportCoords[] = []; 
+}
+
 export const getOfficerReports = async (uid: string) => {
-  console.log("UID: ",uid);
-  let reports: any[] = [];
-  if (uid) {
-    // Check if uid is not null or undefined
-    
-    const reportsSnapshot = await getDocs(collection(db, "reports"));
 
-    const usersDocuments = doc(collection(db, "users"), uid); // Remove toString() if uid is already a string
-    console.log("WHAT I'M LOOKING AT: ", usersDocuments);
-    const usersSnapshot = await getDoc(usersDocuments);
-
-    try {
-      if (usersSnapshot.exists()) {
-        reportsSnapshot.forEach((doc) => {
-          const reportData = doc.data();
-          const reportUid = reportData.uid;
-
-          if (reportUid === uid) {
-            reports.push({ ...doc.data(), uid: doc.id });
-          }
-          console.log(reports);
-        });
-      }
-      
-    } catch (error) {
-      console.error(error);
-    
-    }
-    return reports;
-  } else {
-    console.error("Invalid uid provided.");
-    
+  if (!uid) {
+    console.error("Invalid uid provided. ", uid);
+    return [];
   }
-
-
+  
+  try {
+    const querySnapshot = await getDocs(
+      query(collection(db, "reports"), where("uid", "==", uid))
+    );
+    const reports = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      uid: doc.id,
+    }));
+    return reports;
+  } catch (error) {
+    console.error("Error fetching officer reports", error);
+    return [];
+  }
 };

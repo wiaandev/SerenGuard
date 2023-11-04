@@ -26,8 +26,6 @@ export default function NeighbourhoodDetail({
   navigation: DetailScreenProps["navigation"];
 }) {
   const { data, details } = route.params;
-  console.log(data);
-  console.log(details);
   return (
     <SafeAreaView
       style={{ backgroundColor: colors.black, flex: 1, padding: 20 }}
@@ -45,7 +43,13 @@ export default function NeighbourhoodDetail({
       <Text style={styles.subHeading}>{data?.description}</Text>
       <Text style={styles.subHeading}>{details?.formatted_address}</Text>
       <View
-        style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: 'center', marginVertical: 10 }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          alignItems: "center",
+          marginVertical: 10,
+        }}
       >
         <Text style={styles.subHeading}> 16 reports in area</Text>
         <Text style={styles.subHeading}> x - most report types</Text>

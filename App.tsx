@@ -107,7 +107,6 @@ const App = () => {
   const checkOnboarding = async () => {
     try {
       const value: any = await AsyncStorage.getItem("@onboardingCompleted");
-      console.log("value: ", value);
 
       if (value == true) {
         setOnboardingCompleted(true);

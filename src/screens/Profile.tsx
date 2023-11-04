@@ -8,8 +8,7 @@ import { ResponseType } from "axios";
 import { getAuth } from "firebase/auth";
 import { colors } from "../utils/colors";
 import { Button } from "react-native-paper";
-// import { getOfficerReports } from "../firebase/firebase-db";
-import { checkIsOfficer, onLogOut } from "../firebase/firebase-auth";
+import { checkIsOfficer, getCurrentUser, onLogOut } from "../firebase/firebase-auth";
 import { getOfficerReports } from "../firebase/firebase-db";
 import { useFocusEffect } from "@react-navigation/native";
 import ReportCard from "../components/custom/ReportCard";
@@ -23,7 +22,7 @@ export default function Profile({ navigation }: ProfileScreenProps) {
   const { loggedInUser, getCurrentSignedInUser } = useContext(UserContext);
   const [reports, setReports] = useState<any>({});
   const [isOfficer, setIsOfficer] = useState<boolean>();
-  let [userId, setUserId] = useState<any>();
+  let [userId, setUserId] = useState<string>();
 
   const logoutUser = () => {
     onLogOut();
@@ -31,7 +30,6 @@ export default function Profile({ navigation }: ProfileScreenProps) {
   };
 
   const renderItem = ({ item }: any) => {
-    console.log(item);
 
     return <ReportCard {...item} />;
   };
@@ -39,22 +37,38 @@ export default function Profile({ navigation }: ProfileScreenProps) {
   console.log(loggedInUser);
   console.log(getCurrentSignedInUser);
 
-  useEffect(() => {
-    getCurrentSignedInUser();
 
-    const unsubscribe = getAuth().onAuthStateChanged((user) => {
+  const testOfficerReportGetter = async () => {
+    const currentlySignedInUser = loggedInUser;
+
+    if(currentlySignedInUser.uid !== null || currentlySignedInUser.uid !== undefined){
+      console.log(currentlySignedInUser.uid, 'Something');
+      const officerReports = await getOfficerReports(currentlySignedInUser.uid as string);
+      setReports(officerReports);
+    } else {
+      console.log("Undefined, check in Firebase")
+    }
+  }
+
+
+
+  useEffect(() => {
+   testOfficerReportGetter();
+  },[]) 
+  
+
+  useEffect(() => {
+    let unsubscribe = getAuth().onAuthStateChanged((user) => {
       if (user) {
         const uuid = user.uid;
-        console.log("USER :", uuid);
-        setUserId(uuid as string);
-        console.log("USER ID:", userId);
+        setUserId(uuid);
 
         checkIsOfficer(uuid)
           .then((result: any) => {
             setIsOfficer(result);
           })
           .catch((error) => {
-            console.log("error checking if user is officer", error);
+            console.log("error checking if user is an officer", error);
             setIsOfficer(false);
           });
       } else {
@@ -67,16 +81,6 @@ export default function Profile({ navigation }: ProfileScreenProps) {
     };
   }, []);
 
-  const getOfficersReports = async () => {
-    const officerReports = await getOfficerReports(userId as string);
-    setReports(officerReports);
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      getOfficersReports();
-    }, [])
-  );
 
   return (
     <SafeAreaView
@@ -86,9 +90,9 @@ export default function Profile({ navigation }: ProfileScreenProps) {
         onPress={() => navigation.goBack()}
         style={{ alignSelf: "flex-start", color: colors.white }}
       >
-        Go Back
+        Go Bac
       </Text>
-
+      <Text>{userId}</Text>
       <Image
         source={{ uri: loggedInUser?.photoURL }}
         style={styles.profileImg}
@@ -101,7 +105,7 @@ export default function Profile({ navigation }: ProfileScreenProps) {
           alignSelf: "center",
         }}
         onPress={() => {
-          () => console.log("HEH", userId.uuid);
+          () => console.log("HEH", userId);
         }}
       >
         {loggedInUser.displayName}
@@ -132,9 +136,9 @@ export default function Profile({ navigation }: ProfileScreenProps) {
           <Text
             style={{ color: colors.orange, fontSize: 18, fontWeight: "700" }}
           >
-            Reports
+            Report
           </Text>
-          <FlatList data={reports} renderItem={renderItem}/>
+          <FlatList data={reports} renderItem={renderItem} />
         </>
       )}
       <Button

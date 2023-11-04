@@ -35,7 +35,6 @@ export default function Home({ navigation }: HomeScreenProps) {
     const unsubscribe = getAuth().onAuthStateChanged((user) => {
       if (user) {
         const uid = user.uid;
-        console.log(uid);
 
         checkIsOfficer(uid)
           .then((result: any) => {
@@ -79,8 +78,6 @@ export default function Home({ navigation }: HomeScreenProps) {
             language: "en", // language of the results
           }}
           onPress={(data, details = null) => {
-            console.log("DATA: ", data);
-            console.log("DETAILS: ", details);
             navigation.navigate("Detail", {
               data,
               details,

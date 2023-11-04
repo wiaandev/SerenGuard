@@ -26,7 +26,6 @@ export default function Onboarding({ navigation }: onboardingProps) {
     if (slidesRef?.current && currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
       setCurrentIndex((prevIndex) => {
-        console.log(prevIndex + 1);
         return prevIndex + 1;
       });
     } else {
