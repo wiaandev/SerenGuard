@@ -1,6 +1,7 @@
 export const customDarkTheme = {
     "colors": {
-      "primary": "rgb(253, 77, 3)",
+      "primary": "rgb(255, 255, 255)",
+      "primaryButton": "rgb(253, 77, 3)",
       "onPrimary": "rgb(96, 21, 0)",
       "primaryContainer": "rgb(253, 77, 3)",
       "onPrimaryContainer": "rgb(255, 255, 255)",
@@ -12,7 +13,7 @@ export const customDarkTheme = {
       "onTertiary": "rgb(0, 54, 61)",
       "tertiaryContainer": "rgb(0, 79, 88)",
       "onTertiaryContainer": "rgb(151, 240, 255)",
-      "error": "rgb(255, 0, 0)",
+      "error": "rgb(255, 87, 87)",
       "onError": "rgb(105, 0, 5)",
       "errorContainer": "rgb(147, 0, 10)",
       "onErrorContainer": "rgb(255, 180, 171)",

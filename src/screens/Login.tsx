@@ -16,7 +16,7 @@ import { firebase } from "../../config/config";
 import { getAuth } from "firebase/auth";
 import { emailPattern, passwordPattern } from "../utils/regex";
 import { onSignInUser } from "../firebase/firebase-auth";
-import { colors } from "../utils/colors";
+import { colors } from '../utils/colors';
 
 type LoginProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Login">;
@@ -77,7 +77,6 @@ export default function Login({ navigation }: LoginProps) {
           mode="flat"
           label={"Email"}
           error={!email.match(emailPattern) && email.length > 2}
-          style={{ backgroundColor: colors.white }}
           value={email}
           autoCorrect={false}
           autoCapitalize="none"
@@ -90,7 +89,6 @@ export default function Login({ navigation }: LoginProps) {
           mode="flat"
           label={"Password"}
           secureTextEntry={secureTextEntry}
-          style={{ backgroundColor: colors.white }}
           right={
             <TextInput.Icon
               icon={secureTextEntry ? "eye-off" : "eye"}
@@ -105,22 +103,22 @@ export default function Login({ navigation }: LoginProps) {
           }
         />
 
-        <Button mode="contained" onPress={login}>
+        <Button mode="contained" onPress={login} style={{backgroundColor: colors.orange}}>
           Login
         </Button>
 
         <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
         <Button
           icon={"google"}
-          labelStyle={{ color: colors.black }}
+          labelStyle={{ color: colors.white }}
           mode="outlined"
           style={{ width: 200, alignSelf: "center" }}
-          buttonColor={colors.white}
+
         >
           Login with Google
         </Button>
 
-        <Button mode="text" onPress={() => navigation.navigate("Register")}>
+        <Button mode="text" onPress={() => navigation.navigate("Register")} labelStyle={{color: colors.orange}}>
           Go to register
         </Button>
       </SafeAreaView>

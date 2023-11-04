@@ -25,12 +25,12 @@ export default function Auth({ navigation }: AuthScreenProps) {
           mode="contained"
           onPress={() => navigation.navigate("Register")}
           labelStyle={{color: colors.white}}
-          style={{marginBottom: 10, marginTop: 100}}
+          style={{marginBottom: 10, marginTop: 100, backgroundColor: colors.orange}}
         >
           Register
         </Button>
 
-        <Button mode="outlined" onPress={() => navigation.navigate("Login")} style={{backgroundColor: colors.white, marginVertical: 10}}>
+        <Button mode="outlined" onPress={() => navigation.navigate("Login")} style={{backgroundColor: "transparent", marginVertical: 10}}>
           Login
         </Button>
       </SafeAreaView>

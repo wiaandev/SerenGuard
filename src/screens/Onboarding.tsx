@@ -51,7 +51,9 @@ export default function Onboarding({ navigation }: onboardingProps) {
   //const viewConfig = useRef({viewAreaConveragePercentThreshold: 50}).current //needs to be at least 50% on screen before changingto next slide
 
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: theme.colors.background}]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <FlatList
         data={slides}
         renderItem={({ item }) => <OnboardingItem item={item} />}

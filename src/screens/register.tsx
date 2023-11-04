@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   ImageBackground,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,6 +28,9 @@ import {
   passwordPattern,
 } from "../utils/regex";
 import { onRegisterNewUser } from "../firebase/firebase-auth";
+import { UserRegistrationData, UserType } from "../types/userTypes";
+import { useTheme } from "react-native-paper";
+import DropDown from "react-native-paper-dropdown";
 
 type RegisterProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Register">;
@@ -68,6 +72,10 @@ export default function Register({ navigation }: RegisterProps) {
   const [officerIdError, setOfficerIdError] = useState("");
   const [rankError, setRankError] = useState("");
 
+  // Dropdown states
+  const [showMultiSelectDropDown, setShowMultiSelectDropDown] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+
   // setting these states so I can switch to show and hide passwords
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
@@ -94,24 +102,35 @@ export default function Register({ navigation }: RegisterProps) {
     console.log("running function");
     if (!firstName.match(namePattern)) {
       setFirstNameError("Invalid First Name");
+      return false;
     }
 
     if (lastName.length < 1) {
       setLastNameError("Invalid Last Name");
+      return false;
     }
     if (!email.match(emailPattern)) {
       setEmailError("Invalid Email");
+      return false;
     }
     if (!password.match(passwordPattern)) {
       setPasswordError(
         "Password: Min. 6 characters, 1 uppercase, 1 lowercase, 1 symbol."
       );
+      return false;
     } else {
       setPasswordError("");
     }
-    if (!officerId.match(idPattern)) {
+    if (!officerId.match(idPattern) && value === "officer") {
       setOfficerIdError("Invalid Officer ID");
+      return false;
     }
+    if (selectedRank == "" && value === "officer") {
+      setRankError("Choose your rank");
+      return false;
+    }
+
+    return true;
   };
 
   // const checkValues = () => {
@@ -128,17 +147,93 @@ export default function Register({ navigation }: RegisterProps) {
   // return emptyVals;
   // }
 
+  // const registerUser = () => {
+  //   validateInputs();
+  //   if (
+  //     firstName == "" ||
+  //     lastName == "" ||
+  //     email == "" ||
+  //     password == "" ||
+  //     confirmPassword == ""
+  //   ) {
+  //     Alert.alert("Some fields are empty");
+  //   } else {
+  //     onRegisterNewUser({
+  //       firstName: firstName,
+  //       lastName: lastName,
+  //       email: email,
+  //       officerId: officerId,
+  //       isOfficer: officerId ? true : false,
+  //       rank: officerId ? selectedRank : "N/A",
+  //       password: password,
+  //     });
+  //   }
+  // };
+
   const registerUser = () => {
-    validateInputs();
-    onRegisterNewUser({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      officerId: officerId,
-      isOfficer: officerId ? true : false,
-      rank: officerId ? selectedRank : "N/A",
-      password: password,
-    });
+    const valInputs: any = validateInputs();
+
+    if (!valInputs) {
+      console.log("some form values are incorrect");
+      console.log(firstName);
+      console.log(lastName);
+      console.log(email);
+      console.log(password);
+      console.log(confirmPassword);
+      console.log(selectedRank);
+      console.log(officerId);
+      return;
+    }
+
+    let userRegistrationData: UserRegistrationData = {
+      firstName,
+      lastName,
+      email,
+      password,
+    };
+
+    if (value === "officer") {
+      if (!officerId || !selectedRank) {
+        console.log("Enter all your officer credentials");
+        return;
+      }
+
+      userRegistrationData = {
+        ...userRegistrationData,
+        officerId: officerId,
+        isOfficer: true,
+        selectedRank: selectedRank,
+      };
+    } else {
+      userRegistrationData = {
+        ...userRegistrationData,
+        isOfficer: false,
+        selectedRank: "N/A",
+      };
+    }
+
+    // Perform specific validation for civilians here (e.g., check if other properties are set)
+    if (value !== "officer" && userRegistrationData.isOfficer) {
+      Alert.alert("Civilian cannot have Officer ID and Rank");
+      return;
+    }
+
+    const finalUser: UserType = {
+      firstName: userRegistrationData.firstName,
+      lastName: userRegistrationData.lastName,
+      email: userRegistrationData.email,
+      password: userRegistrationData.password,
+      officerId: userRegistrationData.officerId || "",
+      isOfficer: !!userRegistrationData.isOfficer,
+      rank: userRegistrationData.selectedRank,
+    };
+
+    if(!onRegisterNewUser){
+      setOfficerIdError("OfficerId already exists");
+      Alert.alert("Officer ID already exists");
+    }
+
+    onRegisterNewUser(finalUser);
   };
 
   return (
@@ -178,6 +273,7 @@ export default function Register({ navigation }: RegisterProps) {
             onChangeText={(formvalue) =>
               setFormVals({ ...formVals, firstName: formvalue })
             }
+            style={{ color: "green" }}
           />
 
           <Text style={{ color: colors.error }}>{firstNameError}</Text>
@@ -267,27 +363,40 @@ export default function Register({ navigation }: RegisterProps) {
             </>
           )}
           {value === "officer" && (
-            <Menu
-              visible={visible}
-              onDismiss={closeMenu}
-              anchor={<Button onPress={openMenu}>Select Rank</Button>}
-            >
-              {PoliceRanks.map((rank) => (
-                <Menu.Item
-                  title={rank}
-                  key={rank}
-                  onPress={() => onRankSelect(rank)}
-                />
-              ))}
-            </Menu>
+            // <Menu
+            //   visible={visible}
+            //   onDismiss={closeMenu}
+            //   anchor={<Button onPress={openMenu}>Select Rank</Button>}
+            // >
+            //   {PoliceRanks.map((rank) => (
+            //     <Menu.Item
+            //       title={rank}
+            //       key={rank}
+            //       onPress={() => onRankSelect(rank)}
+            //     />
+            //   ))}
+            // </Menu>
+            <>
+              <DropDown
+                label={"Rank"}
+                mode="flat"
+                visible={showMultiSelectDropDown}
+                showDropDown={() => setShowMultiSelectDropDown(true)}
+                onDismiss={() => setShowMultiSelectDropDown(false)}
+                value={selectedRank}
+                list={PoliceRanks.map((rank) => ({ label: rank, value: rank }))}
+                setValue={setSelectedRank}
+                multiSelect={false}
+              />
+              <Text style={{ color: colors.error }}>{rankError}</Text>
+            </>
           )}
-
-          <Text style={{ color: "red" }}>{selectedRank}</Text>
 
           <Button
             mode="contained"
             onPress={registerUser}
             disabled={disableButton}
+            style={{ backgroundColor: colors.orange }}
           >
             Create Account
           </Button>
@@ -295,10 +404,9 @@ export default function Register({ navigation }: RegisterProps) {
           <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
           <Button
             icon={"google"}
-            labelStyle={{ color: colors.black }}
+            labelStyle={{ color: colors.white }}
             mode="outlined"
             style={{ width: 200, alignSelf: "center" }}
-            buttonColor={colors.white}
           >
             Register with Google
           </Button>
@@ -307,6 +415,7 @@ export default function Register({ navigation }: RegisterProps) {
             mode="text"
             onPress={() => navigation.navigate("Login")}
             elevation={1}
+            labelStyle={{ color: colors.orange }}
           >
             Go to Login
           </Button>

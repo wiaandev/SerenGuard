@@ -34,9 +34,8 @@ export default function NextButton({ percentage, scrollTo }: any) {
         circumference - (circumference * value.value) / 100;
 
       if (progressRef?.current) {
-        progressRef.current.setNativeProps({
-          strokeDashoffset,
-        });
+        const nativeProps: object = { strokeDashoffset };
+        progressRef.current.setNativeProps(nativeProps);
       }
     });
   }, [percentage]);
@@ -46,7 +45,7 @@ export default function NextButton({ percentage, scrollTo }: any) {
       <Button
         onPress={scrollTo}
         mode="contained"
-        style={{ padding: 5, marginBottom: 10 }}
+        style={{ padding: 5, marginBottom: 10, backgroundColor: colors.orange }}
       >
         {percentage === 100 ? "Get Started" : "Next"}
       </Button>
@@ -58,6 +57,5 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent",
   },
 });
