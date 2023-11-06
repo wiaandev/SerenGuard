@@ -308,11 +308,11 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 - [React Native Elements](https://reactnativeelements.com/docs)
 
 [image1]: src/assets/readme-assets/about-project.png
-[image2]: assets/readme-assets/login-signup.png
-[image3]: assets/readme-assets/competition.png
-[image4]: assets/readme-assets/pets.png
-[image5]: assets/readme-assets/competition.jpg
-[image6]: assets/readme-assets/vote.png
+[image2]: src/assets/readme-assets/home.png
+[image3]: src/assets/readme-assets/login-signup.png
+[image4]: src/assets/readme-assets/onboarding.png
+[image5]: src/assets/readme-assets/profile.png
+[image6]: src/assets/readme-assets/about-project.png
 [image8]: assets/readme-assets/wireframes.png
 [image9]: assets/readme-assets/database.png
 [image10]: assets/readme-assets/user-flow.png
