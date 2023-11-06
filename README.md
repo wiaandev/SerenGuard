@@ -201,11 +201,11 @@ The `Development Process` is the technical implementations and functionality don
 
 ### Implementation Process
 
-For the entirety of the project, I have used <b>Expo CLI</b> and the entire project was built in JSX. For my front-end I have utilised React Native Elements, UI Toolkit for cross-platform development. All the UI elements seen on my application was built and implemented using React Native Elements
+For the entirety of the project, I have used <b>Expo CLI</b> and the entire project was built in JSX. For my front-end I have utilised React Native Elements, UI Toolkit for cross-platform development. All the UI elements seen on my application was built and implemented using React Native Paper.
 
 #### Front-End
 
-- I installed my necessary fonts and created a fonts folder inside of my assets folder, where I then put my fonts. Next in my `App.js` I created a `useFonts` hook which would load my fonts onto the application.
+- I used `react-native-maps` package and its `<MapView/>`, `<Callout/>` and `<Marker/>` API's to show the map, markers and callouts of each report.
 
 - Using a `<FlatList/>` I was able to map my data from my Cloud Firestore database to my front-end.
 
@@ -213,44 +213,44 @@ For the entirety of the project, I have used <b>Expo CLI</b> and the entire proj
 
 ##### Navigation
 - I have made use of a Stack and Tab Navigation during the development of my application.
-- In my `App.js` I created my stack navigation with the `createNativeStackNavigator()` method.
-- I created a seperate `Stacks` folder where I then created a `HomeTab.jsx` file where I then implemeted my Tab Navigation
+- In my `App.tsx` I created my stack navigation with the `createNativeStackNavigator()` method.
 #### Firebase
 
 - I created a `firebaseAuth.js`, `firebaseDb.js` & `firebaseStorage.js` which held all the back-end functionality and API calls I made with my application.
 - In my `firebaseAuth.js` I handled all my data in regards with signing up and logging in a user and getting the currently logged in user.
-- In my `firebaseDb.js` I handled all my data in regards with the CRUD functionality of the application, like getting all the competitions, getting a single competition, getting the user's current pets, getting the leaderboard of a competition, adding a pet to a user profile and much more.
-- In my `firebaseStorage.js` I handled my image uploading functionality which made it possible for users to upload a picture of their pets to the database.
+- In my `firebaseDb.js` I handled all my data in regards with the CRUD functionality of the application
+- In my `firebaseStorage.js` I handled my image uploading functionality
 - Using `createContext()` and `useContext()` hooks in conjunction with wrapping my `App` with a `<Provider>` element  from React I was able to pass state down to any component and then just calling the firestore functions inside of the context files.
 
 #### Highlights
 
 <!-- stipulated the highlight you experienced with the project -->
 
-- A highlight of this project was definitely learning cross-platform development with React Native
-- It was also a high point for me to load my app onto my mobile device and interacting with it
-- Fixing all of the bugs I struggled with was also a big plus for me
-- Seeing the data being pulled from my Cloud Firestore as well as images from my storage bucket.
+- Implementing google maps into my project
+- Working with Google Cloud!
+- Showcasing my pins based on my reports
+- Creating a regex that checks for a certain officer ID pattern, otherwise it would not register the officer to the database.
+- Creating a cool application that solves a certain aspect of a social problem in South Africa!
 
 #### Challenges
 
 <!-- stipulated the challenges you faced with the project and why you think you faced it or how you think you'll solve it (if not solved) -->
 
-- Fixing my context. I had to re-load to re-save my context file and the current file of the screen that I am on in order for the context to re-render and display my data. I unfortunately, could not get it fixed in time.
+- Signing in with Google was a big pain-point. It would sometimes sign me in and other times not. In the future I could maybe add it in a context.
+- I struggled a lot with the onboarding because my AsyncStorage get() method kept returning undefined, which resulted in the user having to go through the onboarding process every time. To address this issue, I will explore an alternative async storage package that could help save the user's state and determine if they had launched the application before.
 
 ### Future Implementation
 
 
 <!-- stipulate functionality and improvements that can be implemented in the future. -->
 
-- Adding onboarding screens
-- Fixing my context bugs
-- Adding animations
-- Adding proper validation to all my screens
-- Adding a map to visualise where the competitions are being held.
-- Adding user profile pictures and adding more information on the user profile screen
-- Adding badges if a dog has won a competition
-- Adding voting functionality.
+- Adding Sign in with google
+- Removing Reports
+- Adding heatmaps to my application
+- Creating my own custom AI model that will help with labelling crime scenes
+- Adding a admin role that will approve reports
+- Adding notifications when new reports have been added
+- Adding AI generated content for each neighbourhood based on report type and total amount of reports
 
 <!-- MOCKUPS -->
 
@@ -297,10 +297,13 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 - [Expo Location](https://www.youtube.com/watch?v=d7G0E_9FwyE&t=396s)
 - [Figma](https://www.figma.com/)
 - [Lecturer](https://github.com/armandpret)
-- [Mockups](https://www.freepik.com)
 - [Anthony Boyd Mockups](https://www.anthonyboyd.graphics/mockups-collection/)
 - [unDraw](https://undraw.co/)
-- [React Native Elements](https://reactnativeelements.com/docs)
+- [Uploading Media to Firebase Storage](https://www.youtube.com/watch?v=syK7ZSnmRUk&ab_channel=BugNinza)
+- [React Native Onboarding](https://www.youtube.com/watch?v=r2NJJye0XnM&t=257s&ab_channel=DesignIntoCode)
+- [React Native Maps & Custom Markers](https://www.youtube.com/watch?v=4N-8RTeQ1fA&t=1123s&ab_channel=PradipDebnath)
+- [Wepik & Storyset Illustrations](https://storyset.com/)
+- [Google Sign in](https://www.youtube.com/watch?v=XB_gNDoOhjY&t=1232s&ab_channel=CodewithBeto)
 
 [image1]: src/assets/readme-assets/about-project.png
 [image2]: src/assets/readme-assets/home.png
