@@ -67,7 +67,9 @@
 SerenGuard is the perfect app for officers to create a close connection with their community with keeping their community up to date with reports in the area. That can range anything from smash and grabs to arson. Officers would be able to submit reports and AI would assist in labelling the images from the reports, civilians would be able to view these reports be informed to stay away from these marked locations on the map. 
 
 ## DISCLAIMER
-<font color="red">The SerenGuard application is designed to enhance personal safety and security by providing users with tools and information for their safety. While we encourage the community to utilize this platform for sharing information related to their safety concerns, we want to make it clear that the SerenGuard application is not a reliable source for accurate crime reporting in your area.</font>
+```diff
+-The SerenGuard application is designed to enhance personal safety and security by providing users with tools and information for their safety. While we encourage the community to utilize this platform for sharing information related to their safety concerns, we want to make it clear that the SerenGuard application is not a reliable source for accurate crime reporting in your area.
+```
 
 ### Built With
 
