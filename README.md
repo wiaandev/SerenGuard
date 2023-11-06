@@ -185,15 +185,15 @@ I've put a lot of thought into the look feel and aesthetic of SerenGuard. I felt
 
 ### Wireframes
 
-![image7][image8]
+![image13][image13]
 
 ### Firestore Database Structure
 
-![image8][image9]
+![image9][image9]
 
 ### User Flow
 
-![image9][image10]
+![image10][image10]
 
 ## Development Process
 
