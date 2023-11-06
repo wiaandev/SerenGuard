@@ -1,20 +1,20 @@
 <br />
 
-![GitHub repo size](https://img.shields.io/github/repo-size/wiaandev/SerenGuard?color=yellow)
-![GitHub watchers](https://img.shields.io/github/watchers/wiaandev/SerenGuard?color=blue)
-![GitHub language count](https://img.shields.io/github/languages/count/wiaandev/SerenGuard?color=aquamarine)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wiaandev/SerenGuard?color=white)
+![GitHub repo size](https://img.shields.io/github/repo-size/wiaandev/SerenGuard?color=orange)
+![GitHub watchers](https://img.shields.io/github/watchers/wiaandev/SerenGuard?color=orange)
+![GitHub language count](https://img.shields.io/github/languages/count/wiaandev/SerenGuard?color=orange)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wiaandev/SerenGuard?color=orange)
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Instagram][instagram-shield]][instagram-url]
 
 <h5 align="center" style="padding:0;margin:0;">Wiaan Duvenhage</h5>
 <h5 align="center" style="padding:0;margin:0;">200307</h5>
-<h6 align="center">DV300 | Term 2</h6>
+<h6 align="center">DV300 | Term 4</h6>
 </br>
 <p align="center">
 
   <a href="https://github.com/wiaandev/SerenGuard">
-    <img src="./assets/icon.png" width="100px">
+    <img src="src/assets/icon.png" width="100px">
   </a>
 
 <h3 align="center">SerenGuard</h3>
@@ -64,13 +64,22 @@
 
 ### Project Description
 
-SerenGuard is an innovative competition app designed specifically for dog owners and enthusiasts. This user-friendly application allows individuals to discover and participate in various dog competitions, providing a platform for their beloved pets to showcase their skills and talents. Whether it's agility, obedience, conformation, or other dog-related activities, SerenGuard offers a comprehensive directory of events and competitions tailored to different breeds and disciplines.
+SerenGuard is the perfect app for officers to create a close connection with their community with keeping their community up to date with reports in the area. That can range anything from smash and grabs to arson. Officers would be able to submit reports and AI would assist in labelling the images from the reports, civilians would be able to view these reports be informed to stay away from these marked locations on the map. 
+
+## DISCLAIMER
+```diff
+- The SerenGuard application is designed to enhance personal safety and security by providing users with tools and
+- information for their safety. While we encourage the community to utilize this platform for sharing information
+- related to their safety concerns, we want to make it clear that the SerenGuard application is not a reliable source
+- for accurate crime reporting in your area.
+```
 
 ### Built With
 
 [<img src="./assets/client.png" width="4%" height="4%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://expo.dev/)
 [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="4%" height="4%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://reactnative.dev/)
 [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" width="4%" height="4%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://firebase.google.com/)
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" width="4%" height="4%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://cloud.google.com/)
 
 <!-- GETTING STARTED -->
 <!-- Make sure to add appropriate information about what prerequesite technologies the user would need and also the steps to install your project on their own mashines -->
@@ -95,14 +104,26 @@ git clone https://github.com/wiaandev/SerenGuard.git
 
 Locate and drag file into Visual studio code.
 
+3. Install Node on machine
+   Visit https://nodejs.org/en/download and install the latest version of node for your system
+
+4. Install Yarn
+   ```sh
+   npm install --global yarn
+   ```
+   or
+   ```sh
+   sudo npm install --global yarn
+   ```
+
 3. Install Packages
 ```sh
-npm install
+yarn install
 ```
 
 4. Run Project
 ```sh
-npm start
+yarn ios
 ```
 
 5. Download Expo Go on Android or iOS
@@ -131,23 +152,23 @@ expo run:ios
 
 ### Register & Login Account
 
-![image2][image2]
-Users can create their account by entering their information
-
-### View competitions
-
 ![image3][image3]
-The initial idea was that users can view competitions based on their phone location. But users can view locations that are open or closed.
+Users can create their account and sign up as either officers or civilians. When you register as an officer you need to have a valid Officer ID and you need to select your rank as an officer.
 
-### Add Dog to Account
+### Onboarding
 
 ![image4][image4]
-Users can add their pets to the application by uploading a picture of them with their necessary credentials, like their weight, height and whether they are vaccinated as some competitions require to know the information.
+When users load onto SerenGuard for the very first time. They would need to go through an onboarding process that explains to them what SerenGuard is all about and some key features about the application
 
-### View Individual Competiton
+### Viewing Reports
+
+![image2][image2]
+Users would be able to view reports made by other officers that would be pinned on the map. Users would be able to tap on a pin so they can read more information about the reports
+
+### Searching for neighbourhoods
 
 ![image5][image5]
-Once tapping on a competition, users can view more information about the competition, like the requirements, the description, when it ends as well as the dogs that have entered as well.
+If a user wants more information about what's going on in their neightbourhood. They can search for their neighbourhood which would take them to a seperate screen where they can view an overview of their neighbourhood and see statistics like the most reported crime and the total amount of reports in their area.
 
 ### Judge Entries
 
@@ -286,12 +307,12 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 - [unDraw](https://undraw.co/)
 - [React Native Elements](https://reactnativeelements.com/docs)
 
-[image1]: assets/readme-assets/about-project.png
-[image2]: assets/readme-assets/login-signup.png
-[image3]: assets/readme-assets/competition.png
-[image4]: assets/readme-assets/pets.png
-[image5]: assets/readme-assets/competition.jpg
-[image6]: assets/readme-assets/vote.png
+[image1]: src/assets/readme-assets/about-project.png
+[image2]: src/assets/readme-assets/home.png
+[image3]: src/assets/readme-assets/login-signup.png
+[image4]: src/assets/readme-assets/onboarding.png
+[image5]: src/assets/readme-assets/profile.png
+[image6]: src/assets/readme-assets/about-project.png
 [image8]: assets/readme-assets/wireframes.png
 [image9]: assets/readme-assets/database.png
 [image10]: assets/readme-assets/user-flow.png
