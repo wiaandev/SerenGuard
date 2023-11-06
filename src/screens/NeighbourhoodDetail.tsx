@@ -35,7 +35,9 @@ export default function NeighbourhoodDetail({
     longitudeDelta: 0.0421,
   });
 
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState<string[]>([]);
+  const [reportTotal, setReportTotal] = useState<number>(0);
+  const [mostCommonCrime, setMostCommonCrime] = useState<string>("none");
 
   const { data, details } = route.params;
   console.log(data);
@@ -52,6 +54,8 @@ export default function NeighbourhoodDetail({
   const getReports = async () => {
     const reports: any = await getReportsByArea(details?.vicinity);
     setReports(reports);
+    setReportTotal(reports.totalReports);
+    setMostCommonCrime(reports.mostCommonCrime);
   };
 
   useFocusEffect(
@@ -62,11 +66,11 @@ export default function NeighbourhoodDetail({
 
   return (
     <SafeAreaView
-      style={{ backgroundColor: colors.black, flex: 1, padding: 20 }}
+      style={{ backgroundColor: colors.black, flex: 1, padding: 20, gap: 10 }}
     >
       <Text
         onPress={() => navigation.navigate("Home")}
-        style={{ marginVertical: 10, color: colors.white }}
+        style={{ marginVertical: 30, color: colors.white }}
       >
         Go Back
       </Text>
@@ -74,22 +78,45 @@ export default function NeighbourhoodDetail({
       <Text style={styles.subHeading}>
         {details?.address_components[2].long_name}
       </Text>
-      <Text style={styles.subHeading}>{data?.description}</Text>
-      <Text style={styles.subHeading}>{details?.formatted_address}</Text>
+      <Text style={styles.smallText}>{details?.formatted_address}</Text>
       <View
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           gap: 10,
           alignItems: "center",
           marginVertical: 10,
         }}
       >
-        <Text style={styles.subHeading}> {reports.length} report(s) in area</Text>
-        <Text style={styles.subHeading}> x - most report types</Text>
+        <View
+          style={{
+            backgroundColor: colors.orange_dark,
+            padding: 10,
+            borderRadius: 5,
+            alignSelf: "flex-start",
+            justifyContent: "flex-start",
+            marginTop: 20,
+          }}
+        >
+          <Text style={styles.numberHeading}> {reportTotal}</Text>
+          <Text style={styles.subHeading}> report(s) in area</Text>
+        </View>
+        <View
+          style={{
+            gap: 10,
+            padding: 13,
+            borderRadius: 5,
+            justifyContent: "flex-start",
+            marginTop: 20,
+          }}
+        >
+          <Text style={styles.crimeHeading}> {mostCommonCrime}</Text>
+          <Text style={styles.subHeading}> Prevalent crime</Text>
+        </View>
       </View>
-      <Image source={{ uri: details?.icon }} />
-      <Image source={{ uri: details?.icon }} />
+      <View style={{flex: 0.4}}>
+
+      </View>
       <DistrictMap
         lat={details.geometry.location.lat}
         long={details.geometry.location.lng}
@@ -106,8 +133,26 @@ const styles = StyleSheet.create({
   },
 
   subHeading: {
-    fontSize: 18,
+    fontSize: 16,
     color: colors.white,
     fontStyle: "italic",
+  },
+
+  smallText: {
+    fontSize: 12,
+    color: colors.orange,
+    fontStyle: "italic",
+  },
+
+  numberHeading: {
+    fontSize: 36,
+    fontWeight: "700",
+    color: colors.white,
+  },
+
+  crimeHeading: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: colors.orange_dark,
   },
 });

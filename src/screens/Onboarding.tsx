@@ -40,7 +40,7 @@ export default function Onboarding({ navigation }: onboardingProps) {
 
   const skipOnboarding = async () => {
     try {
-      await AsyncStorage.setItem("@onboardingCompleted", "true");
+      await AsyncStorage.setItem("onboarded", "true");
       navigation.navigate("Auth");
     } catch (error) {
       console.log("Error @setItem: ", error);
@@ -77,7 +77,7 @@ export default function Onboarding({ navigation }: onboardingProps) {
         scrollTo={scrollTo}
       />
       <Button
-        onPress={skipOnboarding}
+        onPress={() => skipOnboarding()}
         mode="text"
         style={{ padding: 5, marginBottom: 10 }}
       >

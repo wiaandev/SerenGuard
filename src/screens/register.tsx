@@ -31,9 +31,11 @@ import { onRegisterNewUser } from "../firebase/firebase-auth";
 import { UserRegistrationData, UserType } from "../types/userTypes";
 import { useTheme } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
+import { RouteProp } from "@react-navigation/native";
 
 type RegisterProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Register">;
+  promptAsync: () => void;
 };
 
 const defaultValues = {
@@ -46,7 +48,7 @@ const defaultValues = {
   confirmPassword: "",
 };
 
-export default function Register({ navigation }: RegisterProps) {
+export default function Register({ navigation, promptAsync }: RegisterProps) {
   //setting the default state of officer which is the officer sign up screen
   const [value, setValue] = useState<string>("officer");
 
@@ -129,43 +131,6 @@ export default function Register({ navigation }: RegisterProps) {
 
     return true;
   };
-
-  // const checkValues = () => {
-  //   const emptyVals: boolean =
-  //   firstName == "" &&
-  //   lastName == "" &&
-  //   email == "" &&
-  //   officerId == "" &&
-  //   rank == "" &&
-  //   password == "" &&
-  //   confirmPassword == "";
-  // setDisableButton(!emptyVals);
-  //   return emptyVals;
-  // return emptyVals;
-  // }
-
-  // const registerUser = () => {
-  //   validateInputs();
-  //   if (
-  //     firstName == "" ||
-  //     lastName == "" ||
-  //     email == "" ||
-  //     password == "" ||
-  //     confirmPassword == ""
-  //   ) {
-  //     Alert.alert("Some fields are empty");
-  //   } else {
-  //     onRegisterNewUser({
-  //       firstName: firstName,
-  //       lastName: lastName,
-  //       email: email,
-  //       officerId: officerId,
-  //       isOfficer: officerId ? true : false,
-  //       rank: officerId ? selectedRank : "N/A",
-  //       password: password,
-  //     });
-  //   }
-  // };
 
   const registerUser = () => {
     const valInputs: any = validateInputs();
@@ -389,15 +354,16 @@ export default function Register({ navigation }: RegisterProps) {
             Create Account
           </Button>
 
-          <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
+          {/* <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
           <Button
             icon={"google"}
             labelStyle={{ color: colors.white }}
             mode="outlined"
             style={{ width: 200, alignSelf: "center" }}
+            onPress={() => promptAsync()}
           >
             Register with Google
-          </Button>
+          </Button> */}
 
           <Button
             mode="text"

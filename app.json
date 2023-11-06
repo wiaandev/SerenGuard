@@ -11,15 +11,25 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "za.co.openwindow.serenguard"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "src/assets/adaptive-icon.png",
         "backgroundColor": "#151414"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "za.co.openwindow.serenguard"
     },
     "web": {
       "favicon": "src/assets/favicon.png"
@@ -37,6 +47,12 @@
           "locationAlwaysInUsePermission": "Allow SerenGuard to use your location?"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "54226094-b65a-46bc-9f33-d6f876a336dc"
+      }
+    },
+    "scheme": "serenguard"
   }
 }

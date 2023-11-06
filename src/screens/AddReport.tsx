@@ -1,7 +1,14 @@
-import { View, Text, Image, Dimensions, ScrollView } from "react-native";
+import { View, Text, Image, Dimensions, ScrollView, Alert } from "react-native";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Chip, Divider, Menu, TextInput } from "react-native-paper";
+import {
+  Button,
+  Chip,
+  Divider,
+  Menu,
+  Modal,
+  TextInput,
+} from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { pickImage, takePhoto } from "../utils/functions/pickImage";
 import { analyzeImage } from "../services/google-cloud";
@@ -13,13 +20,20 @@ import * as Location from "expo-location";
 import { colors } from "../utils/colors";
 import { Timestamp } from "firebase/firestore";
 import DropDown from "react-native-paper-dropdown";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/RootStackParamList";
+import ReportModal from "../components/custom/ReportModal";
 
 const defaultValues = {
   name: "",
   crimeType: "",
 };
 
-export default function AddReport() {
+type AddReportScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, "Report">;
+};
+
+export default function AddReport({ navigation }: AddReportScreenProps) {
   const { location, setLocation } = useContext(UserLocationContext);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [address, setAddress] = useState<string | null>();
@@ -28,6 +42,8 @@ export default function AddReport() {
   const [values, setValues] = useState(defaultValues);
   const { name, crimeType } = values;
   const uid = getCurrentUser()?.uid;
+
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const [visible, setVisible] = useState(false);
   const [selectedCrime, setSelectedCrime] = useState("");
@@ -63,7 +79,7 @@ export default function AddReport() {
   const onSubmitReport = async () => {
     await convertToAddress().then((res) => console.log("RES ", res));
     if (address) {
-      await onCreateReport({
+      let reportAdded = await onCreateReport({
         name: values.name,
         img: imageUri,
         crimeType: selectedCrime,
@@ -75,7 +91,17 @@ export default function AddReport() {
         neighbourhood: district,
         createdAt: Timestamp.now(),
       });
+      if (reportAdded) {
+        // Alert.alert("Success", "Report added successfully", [
+        //   { text: "OK", onPress: () => navigation.navigate("Home") },
+        // ]);
+        setShowModal(true);
+      }
     }
+  };
+
+  const onNavigateBack = () => {
+    navigation.navigate("Home");
   };
 
   return (
@@ -139,20 +165,6 @@ export default function AddReport() {
             dropDownItemTextStyle={{ color: "white" }}
           />
         </View>
-
-        <Button
-          mode="outlined"
-          icon={!imageUri ? "camera-plus" : "file-replace"}
-          onPress={() => takePhoto({ setImageUri })}
-          style={{
-            marginBottom: 10,
-            borderColor: colors.orange,
-            padding: 20,
-            marginVertical: 30,
-          }}
-        >
-          <Text>{!imageUri ? "Take Photo" : "Re-Take Photo"}</Text>
-        </Button>
         <Button
           mode="outlined"
           icon={"image"}
@@ -171,7 +183,7 @@ export default function AddReport() {
         <Button
           mode="contained"
           onPress={() => analyzeImage({ imageUri, setLabels })}
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 10, backgroundColor: colors.orange }}
           disabled={!imageUri}
         >
           <Text>Analyse Photo</Text>
@@ -227,12 +239,18 @@ export default function AddReport() {
           // onPress={() => uploadMedia({ setUploading, setImageUri, imageUri })}
           onPress={onSubmitReport}
           disabled={labels.length < 1}
-          style={{ marginVertical: 20 }}
+          style={{ marginVertical: 20, backgroundColor: colors.orange }}
         >
           Submit Report
         </Button>
-
-        <Text>{getCurrentUser()?.displayName}</Text>
+        {showModal && (
+          <ReportModal
+            vicinity={district}
+            modalVisible={showModal}
+            setModalVisible={setShowModal}
+            navigateToHome={onNavigateBack}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );

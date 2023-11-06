@@ -107,16 +107,15 @@ export default function Login({ navigation }: LoginProps) {
           Login
         </Button>
 
-        <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
+        {/* <Text style={{ alignSelf: "center", color: colors.white }}>Or</Text>
         <Button
           icon={"google"}
           labelStyle={{ color: colors.white }}
           mode="outlined"
           style={{ width: 200, alignSelf: "center" }}
-
         >
           Login with Google
-        </Button>
+        </Button> */}
 
         <Button mode="text" onPress={() => navigation.navigate("Register")} labelStyle={{color: colors.orange}}>
           Go to register

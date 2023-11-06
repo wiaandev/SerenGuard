@@ -1,6 +1,11 @@
 import { StyleSheet, Dimensions, View, Image, Platform } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, {
+  Callout,
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { Text } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { mapStyle } from "../../constants/mapStyle";
@@ -59,7 +64,9 @@ const DistrictMap = ({ long, lat }: any) => {
       <MapView
         style={styles.map}
         showsUserLocation={true}
-        provider={PROVIDER_GOOGLE}
+        provider={
+          Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+        }
         region={mapRegion}
         customMapStyle={mapStyle}
         scrollEnabled={false}
@@ -129,6 +136,7 @@ const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("screen").width * 0.93,
     height: Dimensions.get("screen").height * 0.3,
+    borderRadius: 10
   },
   bubble: {
     flexDirection: "column",

@@ -4,6 +4,7 @@ import MapView, {
   Callout,
   Heatmap,
   Marker,
+  PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
 } from "react-native-maps";
 import { UserLocationContext } from "../../context/user-location.context";
@@ -83,21 +84,9 @@ const Map = () => {
     }
   }, []);
 
-
   const getReports = async () => {
     const reports: any = await getAllReports();
     setReports(reports);
-
-    // for (let i = 0; i < reports.length; i++) {
-    //   let report = reports[i];
-
-    //   if (report.lat && report.long) { // Check if lat and long fields exist in the report
-    //     setPoints((prevPoints) => [
-    //       ...prevPoints,
-    //       { latitude: report.lat, longitude: report.long, weight: 1 },
-    //     ]);
-    //   }
-    // }
   };
 
   useFocusEffect(
@@ -119,24 +108,13 @@ const Map = () => {
       <MapView
         style={styles.map}
         showsUserLocation={true}
-        provider={PROVIDER_GOOGLE}
+        provider={
+          Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+        }
         region={mapRegion}
         customMapStyle={mapStyle}
         showsMyLocationButton
       >
-        {/* <Heatmap
-          points={points}
-          radius={40}
-          opacity={1}
-          gradient={{
-            colors: ["black", "purple", "red", "orange", "white"],
-            startPoints:
-              Platform.OS === "ios"
-                ? [0.01, 0.04, 0.1, 0.45, 0.5]
-                : [0.1, 0.25, 0.5, 0.75, 1],
-            colorMapSize: 2000,
-          }}
-        ></Heatmap> */}
         {reports?.map((report: ReportType) => {
           const reportTimestamp = report.createdAt;
           const currentTimestamp = Timestamp.now();
@@ -170,15 +148,28 @@ const Map = () => {
                 <Callout tooltip>
                   <View style={styles.bubble}>
                     <Text style={styles.name}>{report.name}</Text>
+                    <View style={{ flexDirection: "row", gap: 5 }}>
+                      <Text style={styles.crimeDesc}>{report.crimeType}</Text>
+                      <Text
+                        style={{
+                          fontStyle: "italic",
+                          fontSize: 15,
+                          color: colors.black,
+                          fontWeight: '500',
+                          alignItems: 'center'
+                        }}
+                      >
+                        committed
+                      </Text>
+                    </View>
                     <Text style={styles.address}>{report.address}</Text>
-                    <Text style={styles.address}>
-                      {report.crimeType} committed
-                    </Text>
                     <Text style={styles.time}>Reported {calculatedDate}</Text>
-                    <Text style={styles.time}>{report.createdAt.toDate().toString()}</Text>
+                    <Text style={[styles.time, {marginBottom: 10}]}>
+                      {report.createdAt.toDate().toString()}
+                    </Text>
                     <Text>
                       <Image
-                        style={styles.image}
+                        style={[styles.image, {alignSelf: 'center'}]}
                         source={{ uri: report?.img as string }}
                         resizeMode="contain"
                       />{" "}
@@ -231,7 +222,8 @@ const styles = StyleSheet.create({
   },
   bubble: {
     flexDirection: "column",
-    alignSelf: "flex-start",
+    gap: 5,
+    alignSelf: "center",
     backgroundColor: colors.white,
     padding: 15,
     borderRadius: 10,
@@ -266,6 +258,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.black,
     fontStyle: "italic",
+  },
+  crimeDesc: {
+    fontSize: 16,
+    color: colors.orange,
+    fontStyle: "italic",
+    fontWeight: "600",
   },
   time: {
     fontSize: 10,

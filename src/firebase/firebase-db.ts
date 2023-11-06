@@ -101,7 +101,6 @@ export const onCreateReport = async ({
 
     await setDoc(newDocRef, reportData);
 
-    console.log("Report Added!");
     return true;
   } catch (error) {
     console.error("Error adding report for " + uid, error);
@@ -126,14 +125,32 @@ export const getReportsByArea = async (area: string) => {
   const reports: ReportType[] = [];
   try {
     const querySnapshot = await getDocs(collection(db, "reports"));
+    const crimeTypeCounts: any = {};
     querySnapshot.forEach((doc: DocumentData) => {
+      console.log(doc.data().crimeType);
       if (area == doc.data().neighbourhood) {
-        console.log("AREA: ", area);
-        console.log("NEIGHBOURHOOD: ",doc.neighbourhood);
+        const data = doc.data();
         reports.push({ ...doc.data(), id: doc.id });
+
+        const crimeType = data.crimeType;
+
+        if (crimeTypeCounts[crimeType]) {
+          crimeTypeCounts[crimeType] += 1;
+        } else {
+          crimeTypeCounts[crimeType] = 1;
+        }
       }
     });
-    return reports;
+
+    let mostCommonCrime = null;
+    let maxCount = 0;
+
+    for (let crime in crimeTypeCounts) {
+      if (crimeTypeCounts[crime] > maxCount) {
+        mostCommonCrime = crime;
+      }
+    }
+    return { reports, mostCommonCrime, totalReports: reports.length };
   } catch (error) {
     console.log(error);
     return reports;

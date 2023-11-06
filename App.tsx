@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler, StyleSheet, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,6 +10,18 @@ import {
   PaperProvider,
 } from "react-native-paper";
 import * as Location from "expo-location";
+
+// GOOGLE SIGN IN IMPORTS
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  onAuthStateChanged,
+  signInWithCredential,
+} from "firebase/auth";
+
+const auth = getAuth();
 
 // Screens
 import Auth from "./src/screens/Auth";
@@ -26,10 +38,32 @@ import Home from "./src/screens/Home";
 import { UserLocationContext } from "./src/context/user-location.context";
 import { UserContext, UserProvider } from "./src/context/user.context";
 import { customDarkTheme } from "./src/utils/theme";
+import { OAUTH_CLIENT_KEY_ANDROID, OAUTH_CLIENT_KEY_IOS } from "./config/oauth";
+import { getStorage } from 'firebase/storage';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+WebBrowser.maybeCompleteAuthSession();
+
 const App = () => {
+  const {onboarded, getStorage} = useContext(UserContext);
+  console.log(onboarded);
+  const [userInfo, setUserInfo] = useState();
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: OAUTH_CLIENT_KEY_IOS,
+    androidClientId: OAUTH_CLIENT_KEY_ANDROID,
+  });
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      // Handle the sign-in
+    }
+  }, [response]);
+
+
+
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [onboardingCompleted, setOnboardingCompleted] = useState<any>();
@@ -43,9 +77,9 @@ const App = () => {
     prepare();
   }, []);
 
-  useEffect(() => {
-    checkOnboarding();
-  }, []);
+  // useEffect(() => {
+  //   checkOnboarding();
+  // }, []);
 
   const handleBackButton = () => {
     BackHandler.exitApp();
@@ -104,18 +138,18 @@ const App = () => {
   const customTheme = colorScheme === "dark" ? darkTheme : darkTheme;
 
   //checked if the user has completed the onboarding
-  const checkOnboarding = async () => {
-    try {
-      const value: any = await AsyncStorage.getItem("@onboardingCompleted");
+  // const checkOnboarding = async () => {
+  //   try {
+  //     const value: any = await AsyncStorage.getItem("@onboardingCompleted");
 
-      if (value == true) {
-        setOnboardingCompleted(true);
-      }
-      console.log("onboarding completed: ", onboardingCompleted);
-    } catch (error) {
-      console.log("Error @checkOnboarding: ", error);
-    }
-  };
+  //     if (value == true) {
+  //       setOnboardingCompleted(true);
+  //     }
+  //     console.log("onboarding completed: ", onboardingCompleted);
+  //   } catch (error) {
+  //     console.log("Error @checkOnboarding: ", error);
+  //   }
+  // };
 
   return (
     <PaperProvider theme={customTheme}>
@@ -124,7 +158,7 @@ const App = () => {
           <UserProvider>
             <NavigationContainer>
               <Stack.Navigator
-                initialRouteName={onboardingCompleted ? "Auth" : "Onboarding"}
+                initialRouteName={!onboarded ? "Onboarding" : "Auth"}
                 screenOptions={{ headerShown: false }}
               >
                 <Stack.Screen
@@ -143,11 +177,12 @@ const App = () => {
                 />
                 <Stack.Screen
                   name="Register"
-                  component={Register}
                   options={{
-                    gestureEnabled: false, // Disable swipe-back gesture for this screen
+                    gestureEnabled: false,
                   }}
-                />
+                >
+                  {(props) => <Register {...props} promptAsync={promptAsync} />}
+                </Stack.Screen>
                 <Stack.Screen
                   name="Onboarding"
                   component={Onboarding}

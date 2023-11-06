@@ -8,7 +8,11 @@ import { ResponseType } from "axios";
 import { getAuth } from "firebase/auth";
 import { colors } from "../utils/colors";
 import { Button } from "react-native-paper";
-import { checkIsOfficer, getCurrentUser, onLogOut } from "../firebase/firebase-auth";
+import {
+  checkIsOfficer,
+  getCurrentUser,
+  onLogOut,
+} from "../firebase/firebase-auth";
 import { getOfficerReports } from "../firebase/firebase-db";
 import { useFocusEffect } from "@react-navigation/native";
 import ReportCard from "../components/custom/ReportCard";
@@ -30,32 +34,32 @@ export default function Profile({ navigation }: ProfileScreenProps) {
   };
 
   const renderItem = ({ item }: any) => {
-
     return <ReportCard {...item} />;
   };
 
   console.log(loggedInUser);
   console.log(getCurrentSignedInUser);
 
-
   const testOfficerReportGetter = async () => {
     const currentlySignedInUser = loggedInUser;
 
-    if(currentlySignedInUser.uid !== null || currentlySignedInUser.uid !== undefined){
-      console.log(currentlySignedInUser.uid, 'Something');
-      const officerReports = await getOfficerReports(currentlySignedInUser.uid as string);
+    if (
+      currentlySignedInUser.uid !== null ||
+      currentlySignedInUser.uid !== undefined
+    ) {
+      console.log(currentlySignedInUser.uid, "Something");
+      const officerReports = await getOfficerReports(
+        currentlySignedInUser.uid as string
+      );
       setReports(officerReports);
     } else {
-      console.log("Undefined, check in Firebase")
+      console.log("Undefined, check in Firebase");
     }
-  }
-
-
+  };
 
   useEffect(() => {
-   testOfficerReportGetter();
-  },[]) 
-  
+    testOfficerReportGetter();
+  }, []);
 
   useEffect(() => {
     let unsubscribe = getAuth().onAuthStateChanged((user) => {
@@ -81,7 +85,6 @@ export default function Profile({ navigation }: ProfileScreenProps) {
     };
   }, []);
 
-
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: colors.black, gap: 10, padding: 20 }}
@@ -90,9 +93,8 @@ export default function Profile({ navigation }: ProfileScreenProps) {
         onPress={() => navigation.goBack()}
         style={{ alignSelf: "flex-start", color: colors.white }}
       >
-        Go Bac
+        Go Back
       </Text>
-      <Text>{userId}</Text>
       <Image
         source={{ uri: loggedInUser?.photoURL }}
         style={styles.profileImg}
@@ -136,15 +138,20 @@ export default function Profile({ navigation }: ProfileScreenProps) {
           <Text
             style={{ color: colors.orange, fontSize: 18, fontWeight: "700" }}
           >
-            Report
+            Your Reports
           </Text>
-          <FlatList data={reports} renderItem={renderItem} />
+          <FlatList
+            data={reports}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </>
       )}
       <Button
         onPress={logoutUser}
         mode="contained"
-        style={{ marginTop: "auto" }}
+        style={{ marginTop: "auto", backgroundColor: colors.orange }}
+        buttonColor={colors.orange}
       >
         Logout
       </Button>
