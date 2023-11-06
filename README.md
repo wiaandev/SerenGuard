@@ -71,7 +71,7 @@ SerenGuard is the perfect app for officers to create a close connection with the
 -The SerenGuard application is designed to enhance personal safety and security by providing users with tools and information for their safety. While we encourage the community to utilize this platform for sharing information related to their safety concerns, we want to make it clear that the SerenGuard application is not a reliable source for accurate crime reporting in your area.
 ```
 
-<code style="color : name_color">text</code>
+<code style="color : red">text</code>
 
 ### Built With
 
