@@ -153,7 +153,7 @@ expo run:ios
 ### Register & Login Account
 
 ![image3][image3]
-Users can create their account and sign up as either officers or civilians. When you register as an officer you need to have a valid Officer ID and you need to select your rank as an officer.
+Users can create their account and sign up as either officers or civilians. When you register as an officer you need to have a valid Officer ID and you need to select your rank as an officer. All users would be authenticated and registered on Firestore with a default blue profile image.
 
 ### Onboarding
 
@@ -167,18 +167,13 @@ Users would be able to view reports made by other officers that would be pinned 
 
 ### Searching for neighbourhoods
 
-![image5][image5]
+![image6][image6]
 If a user wants more information about what's going on in their neightbourhood. They can search for their neighbourhood which would take them to a seperate screen where they can view an overview of their neighbourhood and see statistics like the most reported crime and the total amount of reports in their area.
 
-### Judge Entries
+### Adding Reports
 
-![image6][image6]
-Users that have signed up as judges to the application, would be able to judge the entries by adding a score from 1 - 100.
-
-### View Leaderboards
-
-![image7][image7]
-Once the judges have entered the scores for all the pets, they can view the leaderboard of each competition
+![image8][image8]
+As an officer, you have the ability to add reports. Which will add a report based on your phone's current location and pin it to the map. The AI will analyse your uploaded image of your report and append labels to it.
 
 <!-- CONCEPT PROCESS -->
 <!-- Briefly explain your concept ideation process -->
@@ -313,7 +308,7 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 [image4]: src/assets/readme-assets/onboarding.png
 [image5]: src/assets/readme-assets/profile.png
 [image6]: src/assets/readme-assets/neighbourhood.png
-[image8]: assets/readme-assets/wireframes.png
+[image8]: src/assets/readme-assets/add-report.png
 [image9]: assets/readme-assets/database.png
 [image10]: assets/readme-assets/user-flow.png
 [image11]: Images/mockup2.jpg
