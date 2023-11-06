@@ -181,7 +181,7 @@ As an officer, you have the ability to add reports. Which will add a report base
 
 ## Concept Process
 
-I am a very huge fan of dark theme applications and using colors that contrast extremely well, so in conclusion I thought it was a no-brainer to use in black, white and red in conjunction with each other to create the most eye-catching application. By looking at my wireframes you would notice that my answering method differs from the final application outcome. I have come to realise how intricate and dense Kotlin can be so decided to go with a more simpler, yet effective answering method.
+I've put a lot of thought into the look feel and aesthetic of SerenGuard. I felt like a dark-mode application would be the best choice considering I am developing a crime-reporting application. I also wanted to pick a color to go with my dark-mode application and I first decided on red but a peer pointed it out that it may have been too aggressive, so they suggested orange and I thought that it was an amazing choice because it's not too difficult on the eyes and still maintains that strong accent that is easy to catch in a dark-mode application.
 
 ### Wireframes
 
@@ -314,9 +314,9 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 [image8]: src/assets/readme-assets/add-report.png
 [image9]: assets/readme-assets/database.png
 [image10]: assets/readme-assets/user-flow.png
-[image11]: Images/mockup2.jpg
-[image12]: Images/mockup3.jpg
-[image13]: Images/mockup4.jpg
+[image11]: assets/readme-assets/database.png
+[image12]: assets/readme-assets/designs.png
+[image13]: assets/readme-assets/wireframes.png
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/wiaan-duvenhage-95118823a/
 [instagram-shield]: https://img.shields.io/badge/-Instagram-black.svg?style=flat-square&logo=instagram&colorB=555
