@@ -14,7 +14,7 @@
 <p align="center">
 
   <a href="https://github.com/wiaandev/SerenGuard">
-    <img src="./assets/icon.png" width="100px">
+    <img src=".src/assets/icon.png" width="100px">
   </a>
 
 <h3 align="center">SerenGuard</h3>
