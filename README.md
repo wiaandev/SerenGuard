@@ -152,17 +152,17 @@ expo run:ios
 
 ### Register & Login Account
 
-![image2][image2]
+![image3][image3]
 Users can create their account and sign up as either officers or civilians. When you register as an officer you need to have a valid Officer ID and you need to select your rank as an officer.
 
 ### Onboarding
 
-![image3][image3]
+![image4][image4]
 When users load onto SerenGuard for the very first time. They would need to go through an onboarding process that explains to them what SerenGuard is all about and some key features about the application
 
 ### Viewing Reports
 
-![image4][image4]
+![image2][image2]
 Users would be able to view reports made by other officers that would be pinned on the map. Users would be able to tap on a pin so they can read more information about the reports
 
 ### Searching for neighbourhoods
