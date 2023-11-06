@@ -312,7 +312,7 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 [image3]: src/assets/readme-assets/login-signup.png
 [image4]: src/assets/readme-assets/onboarding.png
 [image5]: src/assets/readme-assets/profile.png
-[image6]: src/assets/readme-assets/about-project.png
+[image6]: src/assets/readme-assets/neighbourhood.png
 [image8]: assets/readme-assets/wireframes.png
 [image9]: assets/readme-assets/database.png
 [image10]: assets/readme-assets/user-flow.png
