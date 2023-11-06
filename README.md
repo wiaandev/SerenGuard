@@ -312,11 +312,11 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 [image5]: src/assets/readme-assets/profile.png
 [image6]: src/assets/readme-assets/neighbourhood.png
 [image8]: src/assets/readme-assets/add-report.png
-[image9]: assets/readme-assets/database.png
-[image10]: assets/readme-assets/user-flow.png
-[image11]: assets/readme-assets/database.png
-[image12]: assets/readme-assets/designs.png
-[image13]: assets/readme-assets/wireframes.png
+[image9]: src/assets/readme-assets/database.png
+[image10]: src/assets/readme-assets/user-flow.png
+[image11]: src/assets/readme-assets/database.png
+[image12]: src/assets/readme-assets/designs.png
+[image13]: src/assets/readme-assets/wireframes.png
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/wiaan-duvenhage-95118823a/
 [instagram-shield]: https://img.shields.io/badge/-Instagram-black.svg?style=flat-square&logo=instagram&colorB=555
